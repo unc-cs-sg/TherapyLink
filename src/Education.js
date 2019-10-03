@@ -1,4 +1,7 @@
 import React, {Fragment} from 'react';
+import {
+  Button,
+} from 'react-native';
 
 class Education extends React.Component {
   static navigationOptions = {

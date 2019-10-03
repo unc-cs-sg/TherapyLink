@@ -17,6 +17,7 @@ import Graphs from './Graphs.js';
 import MoodRating from './MoodRating.js';
 import Resources from './Resources.js';
 
+
 const MainNavigator = createStackNavigator({
   MainScreen: {screen: MainScreen},
   Screeners: {screen: Screeners},
@@ -25,7 +26,8 @@ const MainNavigator = createStackNavigator({
   Graphs: {screen: Graphs},
   MoodRating: {screen: MoodRating},
   Resources: {screen: Resources},
-});
+},
+{initialRouteName: 'Diary'});
 
 const App = createAppContainer(MainNavigator);
 export default App;

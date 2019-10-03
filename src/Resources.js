@@ -1,5 +1,7 @@
 import React, {Fragment} from 'react';
-
+import {
+  Button,
+} from 'react-native';
 class Resources extends React.Component {
   static navigationOptions = {
     title: 'Resources',

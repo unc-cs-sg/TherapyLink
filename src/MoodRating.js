@@ -1,4 +1,7 @@
 import React, {Fragment} from 'react';
+import {
+  Button,
+} from 'react-native';
 
 class MoodRating extends React.Component {
   static navigationOptions = {

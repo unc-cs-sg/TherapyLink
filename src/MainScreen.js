@@ -5,6 +5,7 @@ import {
   ScrollView,
   View,
   Text,
+  Button,
   StatusBar,
 } from 'react-native';
 
@@ -42,10 +43,10 @@ const MainScreen = props => {
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>See Your Changes</Text>
               <Text style={styles.sectionDescription}>
-                <Button
+                {/* <Button
                   title="Screeners"
                   onPress={() => navigate('Screeners')}
-                />
+                /> */}
               </Text>
             </View>
             <View style={styles.sectionContainer}>

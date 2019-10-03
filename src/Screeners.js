@@ -1,5 +1,13 @@
 import React, {Fragment} from 'react';
-
+import {
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  View,
+  Text,
+  StatusBar,
+  Button
+} from 'react-native';
 class Screeners extends React.Component {
   static navigationOptions = {
     title: 'Screeners',
@@ -10,4 +18,4 @@ class Screeners extends React.Component {
   }
 }
 
-export default MainScreen;
+export default Screeners;
