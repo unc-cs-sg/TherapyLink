@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Fragment} from 'react';
 import {
   SafeAreaView,
@@ -24,7 +16,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const App = () => {
+const MainScreen = props => {
+  const {navigate} = props.navigation;
   return (
     <Fragment>
       <StatusBar barStyle="dark-content" />
@@ -40,7 +33,7 @@ const App = () => {
           )}
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Step One</Text>
+              <Text style={styles.sectionTitle}>Step One</Text>
               <Text style={styles.sectionDescription}>
                 Edit <Text style={styles.highlight}>App.js</Text> to change this
                 screen and then come back to see your edits.
@@ -49,7 +42,10 @@ const App = () => {
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>See Your Changes</Text>
               <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
+                <Button
+                  title="Screeners"
+                  onPress={() => navigate('Screeners')}
+                />
               </Text>
             </View>
             <View style={styles.sectionContainer}>
@@ -111,4 +107,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default MainScreen;
