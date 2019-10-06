@@ -17,58 +17,55 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const MainScreen = props => {
-  const {navigate} = props.navigation;
-  return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
+class MainScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Therapy Link',
+  };
+  render() {
+    const {navigate} = this.props.navigation;
+    return (
+      <Fragment>
+        <StatusBar barStyle="dark-content" />
+        <SafeAreaView>
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            style={styles.scrollView}>
+            {global.HermesInternal == null ? null : (
+              <View style={styles.engine}>
+                <Text style={styles.footer}>Engine: Hermes</Text>
+              </View>
+            )}
+            <View style={styles.body}>
+              <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>Relax</Text>
+                <Button title="Diary" onPress={() => navigate('Diary')} />
+                <Button title="Education" onPress={() => navigate('Education')} />
+                <Button title="Graphs" onPress={() => navigate('Graphs')} />
+                <Button title="MoodRating" onPress={() => navigate('MoodRating')} />
+                <Button title="Resources" onPress={() => navigate('Resources')} />
+                <Button title="Screeners" onPress={() => navigate('Screeners')} />
+              </View>
+              <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>Debug</Text>
+                <Text style={styles.sectionDescription}>
+                  <DebugInstructions />
+                </Text>
+              </View>
+              <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>Learn More</Text>
+                <Text style={styles.sectionDescription}>
+                  Read the docs to discover what to do next:
               </Text>
+              </View>
+              <LearnMoreLinks />
             </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                {/* <Button
-                  title="Screeners"
-                  onPress={() => navigate('Screeners')}
-                /> */}
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
-  );
-};
+          </ScrollView>
+        </SafeAreaView>
+      </Fragment>
+    );
+  };
 
+}
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
