@@ -27,7 +27,7 @@ const MainNavigator = createStackNavigator({
   MoodRating: {screen: MoodRating},
   Resources: {screen: Resources},
 },
-{initialRouteName: 'Diary'});
+{initialRouteName: 'MainScreen'});
 
 const App = createAppContainer(MainNavigator);
 export default App;
