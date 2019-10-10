@@ -22,46 +22,18 @@ class MainScreen extends React.Component {
     title: 'Therapy Link',
   };
   render() {
-    const {navigate} = this.props.navigation;
+    const { navigate } = this.props.navigation;
     return (
-      <Fragment>
-        <StatusBar barStyle="dark-content" />
-        <SafeAreaView>
-          <ScrollView
-            contentInsetAdjustmentBehavior="automatic"
-            style={styles.scrollView}>
-            {global.HermesInternal == null ? null : (
-              <View style={styles.engine}>
-                <Text style={styles.footer}>Engine: Hermes</Text>
-              </View>
-            )}
-            <View style={styles.body}>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Relax</Text>
-                <Button title="Diary" onPress={() => navigate('Diary')} />
-                <Button title="Education" onPress={() => navigate('Education')} />
-                <Button title="Graphs" onPress={() => navigate('Graphs')} />
-                <Button title="MoodRating" onPress={() => navigate('MoodRating')} />
-                <Button title="Resources" onPress={() => navigate('Resources')} />
-                <Button title="Screeners" onPress={() => navigate('Screeners')} />
-              </View>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Debug</Text>
-                <Text style={styles.sectionDescription}>
-                  <DebugInstructions />
-                </Text>
-              </View>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Learn More</Text>
-                <Text style={styles.sectionDescription}>
-                  Read the docs to discover what to do next:
-              </Text>
-              </View>
-              <LearnMoreLinks />
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </Fragment>
+      <View>
+        <Text style={styles.sectionTitle}>Relax</Text>
+        <Button title="Diary" onPress={() => navigate('Diary')} />
+        <Button title="Education" onPress={() => navigate('Education')} />
+        <Button title="Graphs" onPress={() => navigate('Graphs')} />
+        <Button title="MoodRating" onPress={() => navigate('MoodRating')} />
+        <Button title="Resources" onPress={() => navigate('Resources')} />
+        <Button title="Screeners" onPress={() => navigate('Screeners')} />
+      </View>
+
     );
   };
 
