@@ -10,7 +10,7 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 import MainScreen from './MainScreen.js';
-import Screeners from './Screeners.js';
+import Screeners from './Screeners/Screeners.js';
 import Diary from './Diary.js';
 import Education from './Education.js';
 import Graphs from './Graphs.js';
