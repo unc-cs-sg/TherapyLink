@@ -6,11 +6,9 @@ export default class QuestionList extends Component {
 
     constructor(props) {
         super(props)
-
-        // Bind the this context to the handler function
+        
         this.updateChosenVal = this.updateChosenVal.bind(this);
 
-        // Set some state
         this.state = {
             Q1: 0,
             Q2: 0,

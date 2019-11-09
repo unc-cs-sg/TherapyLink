@@ -49,6 +49,7 @@ class Screeners extends React.Component {
   }
 
   getContent(){
+    const {navigate} = this.props.navigation;
     if(this.state.needScreener){
       return(
         <View>
@@ -72,7 +73,6 @@ class Screeners extends React.Component {
   }
 
   render() {
-    const {navigate} = this.props.navigation;
     return (
        <ScrollView>{this.getContent()}</ScrollView>
     );
