@@ -8,7 +8,13 @@ const colors = {
 const moodRatingStyles = StyleSheet.create({
   container: {
     backgroundColor: colors.mRBlue,
-    width: "100%"
+    width: "100%",
+    padding: 10
+  },
+  sliderBounds: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 11
   }
 });
 
