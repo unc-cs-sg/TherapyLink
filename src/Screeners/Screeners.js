@@ -12,21 +12,69 @@ import QuestionList from './QuestionList.js';
 import RadioButton from './RadioButton.js';
 
 class Screeners extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      needScreener: null,
+      daysUntilNext: null,
+      lastDate: new Date("October 1, 2019")
+    };
+    this.isItTimeForScreener = this.isItTimeForScreener.bind(this);
+    this.getContent = this.getContent.bind(this);
+}
+
   static navigationOptions = {
     title: 'Screeners',
   };
 
+  componentDidMount(){
+    this.setState({
+      needScreener: this.isItTimeForScreener()
+    });
+  }
+
+  isItTimeForScreener(){
+    let currentTime = new Date().getTime();
+    let lastTime = this.state.lastDate.getTime();
+    let daysSince = Math.floor((currentTime - lastTime) / (1000 * 60 * 60 * 24));
+    this.setState({
+      daysUntilNext: 14-daysSince
+    })
+    if(daysSince < 14){
+      return false;
+    }
+    else{
+      return true;
+    }
+  }
+
+  getContent(){
+    if(this.state.needScreener){
+      return(
+        <View>
+          <Text style={styles.Header}>
+            Over the past two weeks, how often have you been bothered by the following problems?
+          </Text>
+          <QuestionList ref={list => {this.list = list}}/>
+          <Button title="submit" onPress={() => navigate('MainScreen')} />   
+        </View>
+      );
+    }
+    else{
+      return(
+        <View>
+          <Text style={styles.Header}>
+              Come back in {this.state.daysUntilNext} {this.state.daysUntilNext > 1 ? 'days' : 'day'} to take your next screener! 
+          </Text>
+        </View>
+      )
+    }
+  }
+
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <ScrollView>
-        <Text style={styles.Header}> 
-          Over the past two weeks, how often have you been bothered by the following problems?
-        </Text>
-        <QuestionList ref={list => {this.list = list}}/>
-        <Button title="submit" onPress={() => navigate('MainScreen')} />   
-      </ScrollView>
-
+       <ScrollView>{this.getContent()}</ScrollView>
     );
   };
 }
