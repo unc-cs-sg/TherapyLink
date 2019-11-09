@@ -1,32 +1,68 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet, Text, View, Button, SectionList, Alert } from "react-native";
+import { Platform, StyleSheet, Text, View, Button, SectionList, Alert} from "react-native";
 import RadioButton from './RadioButton.js';
+
 export default class QuestionList extends Component {
 
-/* Function display user data, when user click on sectionlist items */
-  GetSectionListItem=(item)=>{
-      Alert.alert(item)
-  }
+    constructor(props) {
+        super(props)
 
-  render() {
-    return (
-      <View style={styles.container}>
-      <SectionList
-       sections={[
-         { title: 'Username Starts with A', data: ['Amit', 'Anand', 'Abhishek'] },
-         { title: 'Username Starts with B', data: ['Bikash', 'Bingo', 'Baby'] },
-         { title: 'Username Starts with C', data: ['cat', 'cathy', 'Charan'] },
-         { title: 'Username Starts with D', data: ['Deepak', 'Deepti', 'Dhananjay'] },
-         { title: 'Username Starts with F', data: ['Fatay', 'Fanny', 'Fresher'] },
-       ]}
-       renderSectionHeader={ ({section}) => <Text style={styles.SectionHeader}> { section.title } </Text> }
-       //renderItem={ ({item}) => <Text style={styles.SectionListItemS} onPress={this.GetSectionListItem.bind(this, item)}> { item } </Text> }
-       renderItem={ ({item}) => <RadioButton /> }
-       keyExtractor={ (item, index) => index }
-     />
-      </View>
-    );
-  }
+        // Bind the this context to the handler function
+        this.updateChosenVal = this.updateChosenVal.bind(this);
+
+        // Set some state
+        this.state = {
+            Q1: 0,
+            Q2: 0,
+            Q3: 0,
+            Q4: 0,
+            Q5: 0
+        };
+    }
+
+    GetSectionListItem=()=>{
+        Alert.alert("Q1: " + this.state.Q1 + ", Q2: " + this.state.Q2 + ", Q3: " + this.state.Q3+ 
+        ", Q4: " + this.state.Q4+ ", Q5: " + this.state.Q5);
+    }
+
+    updateChosenVal(id, value){
+        if(id == 1){
+            this.setState({Q1: value});
+        }
+        else if(id == 2){
+            this.setState({Q2: value});
+        }
+        else if(id == 3){
+            this.setState({Q3: value});
+        }
+        else if(id == 4){
+            this.setState({Q4: value});
+        }
+        else if(id == 5){
+            this.setState({Q5: value});
+        }
+    }
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <SectionList
+                sections={[
+                    { title: 'Q1', data: [{id:1}], value:0},
+                    { title: 'Q2', data: [{id:2}], value:0},
+                    { title: 'Q3', data: [{id:3}], value:0},
+                    { title: 'Q4', data: [{id:4}], value:0},
+                    { title: 'Q5', data: [{id:5}], value:0},
+                ]}
+                renderSectionHeader={ ({section}) => <Text style={styles.SectionHeader}> { section.title } </Text> }
+                //renderItem={ ({item}) => <Text style={styles.SectionListItemS} onPress={this.GetSectionListItem.bind(this, item)}> { item } </Text> }
+                renderItem={ ({item}) => <RadioButton index={item.id} handleChange={this.updateChosenVal}/> }
+                keyExtractor={ (item, index) => index }
+                stickySectionHeadersEnabled = {true}
+                />
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -39,8 +75,8 @@ const styles = StyleSheet.create({
       backgroundColor : '#64B5F6',
       fontSize : 20,
       padding: 5,
+      marginBottom:5,
       color: '#fff',
-      fontWeight: 'bold'
    },
     SectionListItemS:{
       fontSize : 16,

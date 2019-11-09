@@ -20,17 +20,26 @@ class Screeners extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <ScrollView>
-      <Button title="Go home" onPress={() => navigate('MainScreen')} />
-        <Text> 
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec urna libero, volutpat et 
-          nibh quis, molestie tristique justo. Quisque finibus vehicula orci, a pharetra ligula suscipit vitae.
+        <Text style={styles.Header}> 
+          Over the past two weeks, how often have you been bothered by the following problems?
         </Text>
-        <RadioButton />
-        <QuestionList />
+        <QuestionList ref={list => {this.list = list}}/>
+        <Button title="submit" onPress={() => navigate('MainScreen')} />   
       </ScrollView>
-    
+
     );
   };
 }
 
+const styles = StyleSheet.create({
+  Header:{
+    fontSize : 20,
+    padding: 6,
+    marginBottom: 2,
+    color: '#000',
+    backgroundColor : '#F5F5F5'
+}
+});
+
 export default Screeners;
+
