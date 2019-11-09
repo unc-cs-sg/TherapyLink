@@ -16,6 +16,7 @@ import Education from './Education.js';
 import Graphs from './Graphs.js';
 import MoodRating from './MoodRating.js';
 import Resources from './Resources.js';
+import GoalSetter from './GoalSetterAndTracking/GoalSetter/GoalSetter'
 
 
 const MainNavigator = createStackNavigator({
@@ -26,6 +27,7 @@ const MainNavigator = createStackNavigator({
   Graphs: {screen: Graphs},
   MoodRating: {screen: MoodRating},
   Resources: {screen: Resources},
+  Goals: {screen: GoalSetter}
 },
 {initialRouteName: 'MainScreen'});
 
