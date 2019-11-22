@@ -14,7 +14,7 @@ import Screeners from './Screeners/Screeners.js';
 import Diary from './Diary.js';
 import Education from './Education.js';
 import Graphs from './Graphs.js';
-import MoodRating from './MoodRating.js';
+import MoodRating from './MoodRating/MoodRating.js';
 import Resources from './Resources.js';
 import GoalSetter from './GoalSetterAndTracking/GoalSetter/GoalSetter'
 
