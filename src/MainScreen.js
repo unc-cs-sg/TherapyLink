@@ -7,6 +7,7 @@ import {
   Text,
   Button,
   StatusBar,
+  Image
 } from 'react-native';
 
 import {
@@ -25,7 +26,10 @@ class MainScreen extends React.Component {
     const { navigate } = this.props.navigation;
     return (
       <View>
-        <Text style={styles.sectionTitle}>Relax</Text>
+        <Image
+            style={{width: 200, height: 200, margin: 10, resizeMode: 'center', alignSelf: 'center'}}
+            source={require('./TherapyLink_Logo.png')}
+        />
         <Button title="Diary" onPress={() => navigate('Diary')} />
         <Button title="Education" onPress={() => navigate('Education')} />
         <Button title="Graphs" onPress={() => navigate('Graphs')} />
