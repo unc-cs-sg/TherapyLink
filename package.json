@@ -8,10 +8,13 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "prop-types": "^15.7.2",
     "react": "16.8.6",
     "react-native": "0.60.5",
+    "react-native-chart-kit": "^3.13.0",
     "react-native-gesture-handler": "^1.4.1",
     "react-native-simple-radio-button": "^2.7.4",
+    "react-native-svg": "^9.13.3",
     "react-navigation": "^4.0.10",
     "react-navigation-stack": "^1.9.3"
   },

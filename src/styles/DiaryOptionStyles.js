@@ -5,7 +5,7 @@ const colors = {
   mRBlue: '#9FEBFF'
 }
 
-const diaryStyles = StyleSheet.create({
+const diaryOptionStyles = StyleSheet.create({
   title: {
     backgroundColor: colors.mRBlue,
     width: "100%",
@@ -30,4 +30,4 @@ const diaryStyles = StyleSheet.create({
   }
 });
 
-export { diaryStyles };
+export { diaryOptionStyles };
