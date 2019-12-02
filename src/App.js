@@ -12,6 +12,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import MainScreen from './MainScreen.js';
 import Screeners from './Screeners/Screeners.js';
 import Diary from './Diary.js';
+import DiaryOptions from './DiaryOptions.js';
 import Education from './Education.js';
 import Graphs from './Graphs.js';
 import MoodRating from './MoodRating.js';
@@ -27,7 +28,8 @@ const MainNavigator = createStackNavigator({
   Graphs: {screen: Graphs},
   MoodRating: {screen: MoodRating},
   Resources: {screen: Resources},
-  Goals: {screen: GoalSetter}
+  Goals: {screen: GoalSetter},
+  DiaryOptions: {screen: DiaryOptions},
 },
 {initialRouteName: 'MainScreen'});
 

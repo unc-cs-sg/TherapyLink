@@ -31,7 +31,7 @@ class Diary extends React.Component {
             <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({entryTitle: text})} value={this.state.entryTitle} />
             <View style={diaryStyles.buttonContainer}>
                 <View style={diaryStyles.optionsButtons}>
-                    <Button title="Current Emotions" onPress={() => navigate('MainScreen')} />
+                    <Button title="Current Emotions" onPress={() => navigate('DiaryOptions')} />
                 </View>
                 <View style={diaryStyles.optionsButtons}>
                 <Button title="Testing" onPress={() => navigate('MainScreen')} />
