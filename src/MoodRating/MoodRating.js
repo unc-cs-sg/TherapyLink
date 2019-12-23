@@ -7,7 +7,8 @@ import {
   View,
   Text,
   Modal,
-  StyleSheet
+  StyleSheet,
+  Alert
 } from 'react-native';
 
 import RadioButton from './RadioButton.js';
@@ -34,6 +35,10 @@ class MoodRating extends React.Component {
     const greeting = "Hi, " + userName + "! It's nice to see you again!";
     const feeling = "How are you feeling today?";
     const blankLine = "";
+    const months = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"]
+    var date = new Date();
+    var dateString = months[date.getMonth()] + " " + date.getDate().toString();
 
     /* TODO: Use the emojis instead of placeholder text icons */
     return (
@@ -59,21 +64,27 @@ class MoodRating extends React.Component {
             <Text>4</Text>
             <Text>5</Text>
           </View>
+          <Slider style={moodRatingStyles.moodScale}
+            value={this.state.mood}
+            minimumValue={1}
+            maximumValue={5}
+            minimumTrackTintColor={colors.trackTint}
+            step={1}
+            onValueChange={value => this.setState({ value })}
+          />
+          <Text>{ blankLine }</Text>
+          <View style={{width: 100}}>
+            <Button
+              title="Save"
+              color={colors.trackTint}
+              onPress={() => Alert.alert("Your " + dateString + " mood has been saved.")}
+            />
+          </View>
         </View>
-        <Slider style={moodRatingStyles.moodScale}
-          value={this.state.mood}
-          minimumValue={1}
-          maximumValue={5}
-          minimumTrackTintColor={colors.trackTint}
-          step={1}
-          onValueChange={value => this.setState({ value })}
-        />
       </View>
     </View>
     );
   }
-
-//  <RadioButton index={2} handleChange={this.updateMood}/>
 
 }
 

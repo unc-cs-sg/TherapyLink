@@ -11,7 +11,8 @@ const moodRatingStyles = StyleSheet.create({
     backgroundColor: colors.mRBlue,
     width: "100%",
     height: "100%",
-    padding: 15
+    padding: 15,
+    justifyContent: "center"
   },
   row: {
     width: "93%",
