@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 const colors = {
-  mRBlue: '#9FEBFF'
+  mRBlue: '#9FEBFF',
+  trackTint: '#333CEA'
 }
 
 const moodRatingStyles = StyleSheet.create({
@@ -10,13 +11,17 @@ const moodRatingStyles = StyleSheet.create({
     backgroundColor: colors.mRBlue,
     width: "100%",
     height: "100%",
-    padding: 10
+    padding: 15,
+    justifyContent: "center"
   },
-  moodScale: {
-    width: "100%",
+  row: {
+    width: "93%",
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  moodScale: {
+    width: "100%"
   }
 });
 
-export { moodRatingStyles };
+export { moodRatingStyles, colors };

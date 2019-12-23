@@ -33,7 +33,7 @@ class MainScreen extends React.Component {
         <Button title="Diary" onPress={() => navigate('Diary')} />
         <Button title="Education" onPress={() => navigate('Education')} />
         <Button title="Graphs" onPress={() => navigate('Graphs')} />
-        <Button title="MoodRating" onPress={() => navigate('MoodRating')} />
+        <Button title="Mood Rating" onPress={() => navigate('MoodRating')} />
         <Button title="Resources" onPress={() => navigate('Resources')} />
         <Button title="Screeners" onPress={() => navigate('Screeners')} />
         <Button title="Goals" onPress={() => navigate('Goals')} />
