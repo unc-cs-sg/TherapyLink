@@ -19,10 +19,6 @@ const diaryStyles = StyleSheet.create({
     width: "50%",
     padding: 20,
   },
-  submitButton: {
-    paddingHorizontal: 60,
-    paddingTop: 20,
-  },
   userComment: {
     paddingHorizontal: 10,
     borderBottomWidth: 3,

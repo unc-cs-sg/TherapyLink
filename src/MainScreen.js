@@ -30,7 +30,7 @@ class MainScreen extends React.Component {
             style={{width: 200, height: 200, margin: 10, resizeMode: 'center', alignSelf: 'center'}}
             source={require('./TherapyLink_Logo.png')}
         />
-        <Button title="Diary" onPress={() => navigate('Diary')} />
+        <Button title="Journal" onPress={() => navigate('Journal')} />
         <Button title="Education" onPress={() => navigate('Education')} />
         <Button title="Graphs" onPress={() => navigate('Graphs')} />
         <Button title="Mood Rating" onPress={() => navigate('MoodRating')} />

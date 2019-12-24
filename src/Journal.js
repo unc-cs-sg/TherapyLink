@@ -9,14 +9,14 @@ import {
 } from 'react-native';
 import {diaryStyles} from './styles/DiaryStyles.js';
 
-class Diary extends React.Component {
+class Journal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {entryTitle: '', userComment: ''};
   }
   
   static navigationOptions = {
-    title: 'Diary',
+    title: 'Journal',
   };
 
   submitListener = () => {
@@ -31,20 +31,17 @@ class Diary extends React.Component {
             <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({entryTitle: text})} value={this.state.entryTitle} />
             <View style={diaryStyles.buttonContainer}>
                 <View style={diaryStyles.optionsButtons}>
-                    <Button title="Current Emotions" onPress={() => navigate('DiaryOptions')} />
+                    <Button title="Feelings" onPress={() => navigate('JournalOptions')} />
                 </View>
                 <View style={diaryStyles.optionsButtons}>
-                <Button title="Testing" onPress={() => navigate('MainScreen')} />
+                <Button title="Submit" onPress={() => navigate('MainScreen')} />
                 </View>
             </View>
             <Text style={{paddingHorizontal: 10}}>Thoughts</Text>
-            <TextInput style={diaryStyles.userComment} placeholder="Describe how you are feeling" multiline={true} numberOfLines = {10} onChangeText={(text) => this.setState({userComment: text})} value={this.state.userComment}/>
-            <View style={diaryStyles.submitButton}>
-              <Button title="Submit" onPress={this.submitListener} />
-            </View>
+            <TextInput style={diaryStyles.userComment} placeholder="Describe your thoughts and how you felt." multiline={true} numberOfLines = {10} onChangeText={(text) => this.setState({userComment: text})} value={this.state.userComment}/>
         </View>
     );
   }
 }
 
-export default Diary;
+export default Journal;
