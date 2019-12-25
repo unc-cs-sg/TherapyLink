@@ -30,6 +30,8 @@ target 'TherapyLink' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNSqlite2', :path => '../node_modules/react-native-sqlite-2'
+
   target 'TherapyLinkTests' do
     inherit! :search_paths
     # Pods for testing
