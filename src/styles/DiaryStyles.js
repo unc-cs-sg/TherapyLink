@@ -21,7 +21,6 @@ const diaryStyles = StyleSheet.create({
   },
   userComment: {
     paddingHorizontal: 10,
-    borderBottomWidth: 3,
     textAlignVertical: "top",
   }
 });

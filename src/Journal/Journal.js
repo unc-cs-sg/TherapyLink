@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Alert
 } from 'react-native';
-import {diaryStyles} from './styles/DiaryStyles.js';
+import {diaryStyles} from '../styles/DiaryStyles.js';
 
 class Journal extends React.Component {
   constructor(props) {

@@ -11,8 +11,8 @@ import {createStackNavigator} from 'react-navigation-stack';
 
 import MainScreen from './MainScreen.js';
 import Screeners from './Screeners/Screeners.js';
-import Journal from './Journal.js';
-import JournalOptions from './JournalOptions.js';
+import Journal from './Journal/Journal.js';
+import JournalOptions from './Journal/JournalOptions.js';
 import Education from './Education.js';
 import Graphs from './Graphs.js';
 import MoodRating from './MoodRating/MoodRating.js';
