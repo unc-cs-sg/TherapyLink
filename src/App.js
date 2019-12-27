@@ -16,7 +16,7 @@ import JournalOptions from './Journal/JournalOptions.js';
 import Education from './Education.js';
 import Graphs from './Graphs.js';
 import MoodRating from './MoodRating/MoodRating.js';
-import Resources from './Resources.js';
+import Resources from './Resources/Resources.js';
 import GoalSetter from './GoalSetterAndTracking/GoalSetter/GoalSetter'
 
 
