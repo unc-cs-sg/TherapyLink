@@ -16,7 +16,13 @@ import JournalOptions from './Journal/JournalOptions.js';
 import Education from './Education.js';
 import Graphs from './Graphs.js';
 import MoodRating from './MoodRating/MoodRating.js';
-import Resources from './Resources.js';
+import Resources from './Resources/Resources.js';
+import MentalHealthInfo from './Resources/MentalHealthInfo.js';
+import FindATherapist from './Resources/FindATherapist.js';
+import Podcasts from './Resources/Podcasts.js';
+import FinancialAssist from './Resources/FinancialAssist.js';
+import CounselingBenefits from './Resources/CounselingBenefits.js';
+import SuicideCrisis from './Resources/SuicideCrisis.js';
 import GoalSetter from './GoalSetterAndTracking/GoalSetter/GoalSetter'
 
 
@@ -28,6 +34,12 @@ const MainNavigator = createStackNavigator({
   Graphs: {screen: Graphs},
   MoodRating: {screen: MoodRating},
   Resources: {screen: Resources},
+  MentalHealthInfo: {screen: MentalHealthInfo},
+  FindATherapist: {screen: FindATherapist},
+  Podcasts: {screen: Podcasts},
+  FinancialAssist: {screen: FinancialAssist},
+  CounselingBenefits: {screen: CounselingBenefits},
+  SuicideCrisis: {screen: SuicideCrisis},
   Goals: {screen: GoalSetter},
   JournalOptions: {screen: JournalOptions},
 },
