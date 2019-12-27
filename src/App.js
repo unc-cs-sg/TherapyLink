@@ -10,7 +10,7 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 import MainScreen from './MainScreen.js';
-import Screeners from './Screeners/Screeners.js';
+import Checkup from './Checkup/Checkup.js';
 import Journal from './Journal/Journal.js';
 import JournalOptions from './Journal/JournalOptions.js';
 import Education from './Education.js';
@@ -23,27 +23,28 @@ import Podcasts from './Resources/Podcasts.js';
 import FinancialAssist from './Resources/FinancialAssist.js';
 import CounselingBenefits from './Resources/CounselingBenefits.js';
 import SuicideCrisis from './Resources/SuicideCrisis.js';
-import GoalSetter from './GoalSetterAndTracking/GoalSetter/GoalSetter'
+import GoalSetter from './GoalSetterAndTracking/GoalSetter/GoalSetter';
 
-
-const MainNavigator = createStackNavigator({
-  MainScreen: {screen: MainScreen},
-  Screeners: {screen: Screeners},
-  Journal: {screen: Journal},
-  Education: {screen: Education},
-  Graphs: {screen: Graphs},
-  MoodRating: {screen: MoodRating},
-  Resources: {screen: Resources},
-  MentalHealthInfo: {screen: MentalHealthInfo},
-  FindATherapist: {screen: FindATherapist},
-  Podcasts: {screen: Podcasts},
-  FinancialAssist: {screen: FinancialAssist},
-  CounselingBenefits: {screen: CounselingBenefits},
-  SuicideCrisis: {screen: SuicideCrisis},
-  Goals: {screen: GoalSetter},
-  JournalOptions: {screen: JournalOptions},
-},
-{initialRouteName: 'MainScreen'});
+const MainNavigator = createStackNavigator(
+  {
+    MainScreen: {screen: MainScreen},
+    Checkup: {screen: Checkup},
+    Journal: {screen: Journal},
+    Education: {screen: Education},
+    Graphs: {screen: Graphs},
+    MoodRating: {screen: MoodRating},
+    Resources: {screen: Resources},
+    MentalHealthInfo: {screen: MentalHealthInfo},
+    FindATherapist: {screen: FindATherapist},
+    Podcasts: {screen: Podcasts},
+    FinancialAssist: {screen: FinancialAssist},
+    CounselingBenefits: {screen: CounselingBenefits},
+    SuicideCrisis: {screen: SuicideCrisis},
+    Goals: {screen: GoalSetter},
+    JournalOptions: {screen: JournalOptions},
+  },
+  {initialRouteName: 'MainScreen'},
+);
 
 const App = createAppContainer(MainNavigator);
 export default App;
