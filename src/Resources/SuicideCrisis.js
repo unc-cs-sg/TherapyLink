@@ -20,30 +20,27 @@ import {
 import {resourcesStyles} from '../styles/ResourcesStyles.js';
 
 
-class MentalHealthInfo extends React.Component {
-
+class SuicideCrisis extends React.Component {
 
     static navigationOptions = {
-        title: 'Mental Health Information',
+        title: 'Suicide Crisis',
     };
 
     render() {
         const {navigate} = this.props.navigation;
 
         return (
+
           <ScrollView>
             <View style={resourcesStyles.resourceContainer}>
               <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="The Boris Lawerence Henson Foundation" onPress={() => Linking.openURL('https://borislhensonfoundation.org/')} />
+                  <Button color="#333CEA" title="The American Foundation for Suicide Prevention " onPress={() => Linking.openURL('https://afsp.org/')} />
               </View>
               <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="Therapy for Black Girls" onPress={() => Linking.openURL('https://www.therapyforblackgirls.com/')} />
+                  <Button color="#333CEA" title="The National Domestic Violence Hotline " onPress={() => Linking.openURL('https://www.thehotline.org/')} />
               </View>
               <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="National Alliance on Mental Illness" onPress={() => Linking.openURL('https://www.nami.org/find-support/diverse-communities/african-americans')} />
-              </View>
-              <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="National Institute of Mental Health" onPress={() => Linking.openURL('https://www.nimh.nih.gov/health/topics/index.shtml')} />
+                  <Button color="#333CEA" title="The Suicide Prevention Lifeline" onPress={() => Linking.openURL('https://suicidepreventionlifeline.org/')} />
               </View>
             </View>
           </ScrollView>
@@ -52,4 +49,4 @@ class MentalHealthInfo extends React.Component {
 
 }
 
-export default MentalHealthInfo;
+export default SuicideCrisis;

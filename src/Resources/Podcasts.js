@@ -20,11 +20,10 @@ import {
 import {resourcesStyles} from '../styles/ResourcesStyles.js';
 
 
-class MentalHealthInfo extends React.Component {
-
+class Podcasts extends React.Component {
 
     static navigationOptions = {
-        title: 'Mental Health Information',
+        title: 'Podcasts',
     };
 
     render() {
@@ -34,22 +33,23 @@ class MentalHealthInfo extends React.Component {
           <ScrollView>
             <View style={resourcesStyles.resourceContainer}>
               <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="The Boris Lawerence Henson Foundation" onPress={() => Linking.openURL('https://borislhensonfoundation.org/')} />
+                <Button color="#333CEA" title="Therapy for Black Girls" onPress={() => Linking.openURL('https://www.therapyforblackgirls.com/podcast/')} />
               </View>
               <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="Therapy for Black Girls" onPress={() => Linking.openURL('https://www.therapyforblackgirls.com/')} />
+                <Button color="#333CEA" title="Oprah’s SuperSoul Conversations" onPress={() => Linking.openURL('http://www.supersoul.tv/')} />
               </View>
               <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="National Alliance on Mental Illness" onPress={() => Linking.openURL('https://www.nami.org/find-support/diverse-communities/african-americans')} />
+                <Button color="#333CEA" title="Affirm" onPress={() => Linking.openURL('https://www.redefineenough.com/affirmpodcast')} />
               </View>
               <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="National Institute of Mental Health" onPress={() => Linking.openURL('https://www.nimh.nih.gov/health/topics/index.shtml')} />
+                <Button color="#333CEA" title="Balanced Black Girl" onPress={() => Linking.openURL('https://balancedblackgirl.libsyn.com/')} />
               </View>
             </View>
+
           </ScrollView>
         );
       };
 
 }
 
-export default MentalHealthInfo;
+export default Podcasts;

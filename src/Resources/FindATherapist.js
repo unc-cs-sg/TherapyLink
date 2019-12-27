@@ -20,11 +20,11 @@ import {
 import {resourcesStyles} from '../styles/ResourcesStyles.js';
 
 
-class MentalHealthInfo extends React.Component {
+class FindATherapist extends React.Component {
 
 
     static navigationOptions = {
-        title: 'Mental Health Information',
+        title: 'Find a Therapist',
     };
 
     render() {
@@ -34,16 +34,13 @@ class MentalHealthInfo extends React.Component {
           <ScrollView>
             <View style={resourcesStyles.resourceContainer}>
               <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="The Boris Lawerence Henson Foundation" onPress={() => Linking.openURL('https://borislhensonfoundation.org/')} />
+                  <Button color="#333CEA" title="Therapy for Black Girls Therapist Directory" onPress={() => Linking.openURL('https://www.therapyforblackgirls.com/gd_therapist/')} />
               </View>
               <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="Therapy for Black Girls" onPress={() => Linking.openURL('https://www.therapyforblackgirls.com/')} />
+                  <Button color="#333CEA" title=" Psychology Today" onPress={() => Linking.openURL('https://www.psychologytoday.com/us')} />
               </View>
               <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="National Alliance on Mental Illness" onPress={() => Linking.openURL('https://www.nami.org/find-support/diverse-communities/african-americans')} />
-              </View>
-              <View style={resourcesStyles.resourceButtons}>
-                <Button color="#333CEA" title="National Institute of Mental Health" onPress={() => Linking.openURL('https://www.nimh.nih.gov/health/topics/index.shtml')} />
+                  <Button color="#333CEA" title="SAMHSA Treatment Locator" onPress={() => Linking.openURL('https://www.findtreatment.samhsa.gov/')} />
               </View>
             </View>
           </ScrollView>
@@ -52,4 +49,4 @@ class MentalHealthInfo extends React.Component {
 
 }
 
-export default MentalHealthInfo;
+export default FindATherapist;
