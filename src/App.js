@@ -11,6 +11,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 
 import MainScreen from './MainScreen.js';
 import Checkup from './Checkup/Checkup.js';
+import EntriesIndex from './Journal/EntriesIndex.js';
 import Journal from './Journal/Journal.js';
 import JournalOptions from './Journal/JournalOptions.js';
 import Education from './Education.js';
@@ -31,6 +32,7 @@ const MainNavigator = createStackNavigator(
     MainScreen: {screen: MainScreen},
     Checkup: {screen: Checkup},
     Journal: {screen: Journal},
+    EntriesIndex: {screen: EntriesIndex},
     Education: {screen: Education},
     Graphs: {screen: Graphs},
     MoodRating: {screen: MoodRating},
