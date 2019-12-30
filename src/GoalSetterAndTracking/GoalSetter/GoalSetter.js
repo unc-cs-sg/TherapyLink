@@ -1,3 +1,5 @@
+//Ram Sudarsan 2019
+
 import React, {Fragment} from 'react';
 import {
   SafeAreaView,
@@ -5,15 +7,18 @@ import {
   ScrollView,
   View,
   Text,
+  TextInput,
   Button,
   StatusBar,
+  AsyncStorage,
+  ToastAndroid
 } from 'react-native';
 import GoalCard from '../GoalCard/GoalCard'
 import CreateGoalCardModal from '../GoalCard/CreateGoalCardModal'
 //import datetimepicker for the calendar stuff
 class GoalSetter extends React.Component {
   static navigationOptions = {
-    title: 'Goal Setter',
+    title: 'Self Care Plan',
   };
 
 
@@ -21,131 +26,168 @@ class GoalSetter extends React.Component {
       super(props)
       this.state = {
         displayModal: false,
-        goalCards: {},
-        editDetails: {
-            title: '',
-            date: '',
-            content: '',
-            hash: '',
-            edit: false
-        },
+        editMode: false,
+        plans: [],
+        editDetails: {}
       }
+      this.getPlans()
+  }
+
+  getPlans = async () => {
+//  AsyncStorage.clear();
+    AsyncStorage.getItem('plans', (err, plansJSON) => {
+        let plans = JSON.parse(plansJSON);
+        let plansToRender = [];
+        for ( endDate in plans) {
+            let newEndDate = new Date(endDate);
+            let newDate = new Date();
+            newEndDate.setHours(0,0,0,0);
+            newDate.setHours(0,0,0,0);
+            if (newEndDate >= newDate) {
+                for ( startDate in plans[endDate]) {
+                    plans[endDate][startDate].plans.forEach((plan, i) => {
+                        let newPlan = {plan, startDate, endDate, index: i};
+                        plansToRender.push(newPlan);
+                    })
+                }
+            }
+        }
+//        console.log(plansToRender);
+        this.setState({
+            plans: plansToRender
+        })
+    })
   }
 
   displayModal = () => {
     this.setState({
         displayModal: !this.state.displayModal,
+        editMode: false,
+        editDetails: {}
     })
   }
 
-  addGoalCard = (title, content, date) => {
-    let i = 0;
-    let h = this.hash(date + title + i);
-    while (this.state.goalCards[h]) {
-        i++;
-        h = this.hash(date+title+i);
-    }
-
-    let replacement = {title: title, content: content, date: date, hash: h};
-    let goalCardsReplacement = Object.assign({}, this.state.goalCards, {[h]: replacement});
-    this.setState({
-        goalCards: goalCardsReplacement
+  addPlan = async (items, startDate, endDate) => {
+    AsyncStorage.getItem('plans', (err, plansJSON) => {
+        let newPlans = JSON.parse(plansJSON);
+        if (newPlans == null || newPlans == undefined) {
+            newPlans = {};
+            newPlans[endDate] = {};
+            newPlans[endDate][startDate] = {};
+            newPlans[endDate][startDate].plans = [];
+        }
+        if (!newPlans.hasOwnProperty(endDate)) {
+            newPlans[endDate] = {};
+            newPlans[endDate][startDate] = {};
+            newPlans[endDate][startDate].plans = [];
+        }
+        if (!newPlans[endDate].hasOwnProperty(startDate)) {
+            newPlans[endDate][startDate] = {};
+            newPlans[endDate][startDate].plans = [];
+        }
+        newPlans[endDate][startDate].plans.push(items);
+        AsyncStorage.setItem('plans', JSON.stringify(newPlans));
+        this.getPlans();
+        ToastAndroid.show('Way to go! You have created a plan for self-care.', ToastAndroid.LONG)
     });
   }
 
-  hash = (string) => {
-    let h = 7;
-    for (let i = 0; i < string.length; i++) {
-        h = h*31 + string.charCodeAt(i);
-    }
-    return h;
-  }
-
-  removeGoalCard = (hash) => {
-    const {[hash]:value, ...goalCardsReplacement } = this.state.goalCards;
+  editPlan = async (items, startDate, endDate, index) => {
+    AsyncStorage.getItem('plans', (err, plansJSON) => {
+            let newPlans = JSON.parse(plansJSON);
+            newPlans[endDate][startDate].plans[index] = items;
+            AsyncStorage.setItem('plans', JSON.stringify(newPlans));
+            this.getPlans();
+        });
     this.setState({
-        goalCards : goalCardsReplacement
-    })
-  }
-
-  displayEditModal = (h) => {
-    let newEditDetails = {
-        hash: h,
-        content: this.state.goalCards[h].content,
-        title: this.state.goalCards[h].title,
-        date: this.state.goalCards[h].date,
-        edit: true
-    }
-    this.setState({
-        displayModal: !this.state.displayModal,
-        editDetails: newEditDetails
-    })
-  }
-
-  editGoalCard = (title, content, date, oldHash) => {
-    const {[oldHash]:value, ...goalCardsTrimmed } = this.state.goalCards;
-    let i = 0;
-    let h = this.hash(date + title + i);
-    while (this.state.goalCards[h]) {
-        i++;
-        h = this.hash(date+title+i);
-    }
-    let replacement = {title: title, content: content, date: date, hash: h};
-    let goalCardsReplacement = Object.assign({}, goalCardsTrimmed, {[h]: replacement});
-    let newEditDetails = {
-        title: '',
-        date: '',
-        content: '',
-        hash: '',
-        edit: false,
-    }
-    this.setState({
-        editDetails: newEditDetails,
-        goalCards: goalCardsReplacement,
+        editDetails: {},
+        editMode: false,
+        displayModal: false
     });
   }
 
-  setFinished = (hash) => {
-    console.log('finished' + hash);
+  showEditModal = (plan, sd, ed, i) => {
+    let items = {};
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    let index = i;
+    let lastUsedKey = Math.max(plan.length, 3);
+    plan.forEach((p) => {
+        let newObj = {[p.key]: p}
+        items = Object.assign({}, items, newObj);
+    });
+    let editDetails = {items, startDate, endDate, lastUsedKey, index}
+    this.setState({
+        editMode: true,
+        displayModal: true,
+        editDetails
+    })
   }
-
 
   componentDidMount() {
-    // fetch() to get all the current goals from server and then add them to the state
-
+    this.getPlans();
   }
 
 
   render() {
-    // return a goal card for each goal that was obtained from the server in componentDidMount
     const {navigate} = this.props.navigation;
+
     return (
         <View>
+        <ScrollView>
             {(this.state.displayModal)
                 ?
-                    <CreateGoalCardModal displayModal = {() => this.displayModal()} setModalVisible = {this.state.displayModal} addCardFunction = {(title, content, date) => this.addGoalCard(title, content, date)} title={this.state.editDetails.title} content={this.state.editDetails.content} date={this.state.editDetails.date} edit = {this.state.editDetails.edit} oldHash= {this.state.editDetails.hash} editCardFunction = {(title, content, date, oldHash) => this.editGoalCard(title, content, date, oldHash)}/>
+                    <CreateGoalCardModal
+                        displayModal = {() => this.displayModal()}
+                        addPlan = {(items, startDate, endDate) => this.addPlan(items, startDate, endDate)}
+                        editPlan = {(items, startDate, endDate, index) => this.editPlan(items, startDate, endDate, index)}
+                        edit = {this.state.editMode}
+                        items = {this.state.editMode ? this.state.editDetails.items : {}}
+                        startDate= {this.state.editMode ? this.state.editDetails.startDate: new Date()}
+                        endDate= {this.state.editMode ? this.state.editDetails.endDate: new Date()}
+                        lastUsedKey= {this.state.editMode ? this.state.editDetails.lastUsedKey : 3}
+                        index= {this.state.editMode ? this.state.editDetails.index : -1}
+                    />
                 :
                     null
             }
             <Button title="Go Home" onPress={() => navigate('MainScreen')} />
-            <Button title="Create Goal" onPress={this.displayModal} />
-            <Text style={styles.sectionTitle}>Relax</Text>
-            {Object.keys(this.state.goalCards).map((i) => {
-                return (
-                    <GoalCard key={this.state.goalCards[i].hash} title={this.state.goalCards[i].title} content = {this.state.goalCards[i].content} date = {this.state.goalCards[i].date} hash = {this.state.goalCards[i].hash} editCardFunction={(hash) => this.displayEditModal(hash)} setFinishedFunction = {(hash) => this.setFinished(hash)} deleteCardFunction = {(hash) => this.removeGoalCard(hash)} />
-                );
-            })}
+            <View style = {styles.buttonContainer}>
+                <Button style = {styles.button} title="Create Plan" onPress={this.displayModal} />
+                <Button style= {styles.button} title="History" onPress = {() => navigate('GoalHistory')} />
+            </View>
+            <Text> Current Plans </Text>
+            {
+                (this.state.plans == null || this.state.plans == undefined || this.state.plans.length == 0)
+                ?
+                    <Text> You do not currently have any active plans. </Text>
+                :
+                    this.state.plans.map((planObj, i) => {
+                        return <GoalCard key={i} plan={planObj.plan} startDate={planObj.startDate} endDate={planObj.endDate} index = {planObj.index} showEditModal = {(plan, startDate, endDate, index) => this.showEditModal(plan, startDate, endDate, index)} showEditButton = {true}/>
+                    })
+            }
+        </ScrollView>
         </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-sectionTitle: {
+  sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
     color: 'black',
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    margin: 3
+  },
+  button: {
+    margin: 3
+  }
 })
 
 export default GoalSetter;
+
+//Ram Sudarsan 2019

@@ -1,3 +1,5 @@
+//Ram Sudarsan 2019
+
 import React from 'react';
 import {Button,
 Modal,
@@ -13,32 +15,37 @@ Keyboard,
 import CreateGoalCardModal from './CreateGoalCardModal';
 
 
-const GoalCard = ({title, content, date, hash, editCardFunction, setFinishedFunction, deleteCardFunction}) => {
+const GoalCard = ({plan, startDate, endDate, index, showEditModal, showEditButton}) => {
     return(
-        <View>
-            <Button
-                title="Done"
-                onPress={() => setFinishedFunction(hash)}
-            />
-            <Button
-                title="Edit"
-                onPress={() => editCardFunction(hash)}
-            />
+        <View style={styles.goalCard}>
             <View>
-                <Text> {title} </Text>
-                <Text> {content} </Text>
-                <Text> {date} </Text>
+                {plan.map((item, i) => {
+                    return (<Text> {i+1}. {item.information} </Text>);
+                })}
+                <Text> Started: {new Date(startDate).toDateString()} </Text>
+                <Text> Ending: {new Date(endDate).toDateString()} </Text>
             </View>
-            <Button
-                title="Delete"
-                onPress={() => deleteCardFunction(hash)}
-            />
+            { showEditButton ?
+                <Button
+                    title="Edit"
+                    onPress = {() => showEditModal(plan, startDate, endDate, index)}
+                />
+                :
+                null
+            }
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-
+    goalCard: {
+        padding: 5,
+        borderWidth: 1,
+        borderColor: 'black',
+        margin: 3
+    }
 })
 
 export default GoalCard;
+
+//Ram Sudarsan 2019

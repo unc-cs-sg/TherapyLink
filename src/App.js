@@ -24,6 +24,7 @@ import FinancialAssist from './Resources/FinancialAssist.js';
 import CounselingBenefits from './Resources/CounselingBenefits.js';
 import SuicideCrisis from './Resources/SuicideCrisis.js';
 import GoalSetter from './GoalSetterAndTracking/GoalSetter/GoalSetter';
+import GoalHistory from './GoalSetterAndTracking/GoalHistory/GoalHistory';
 
 const MainNavigator = createStackNavigator(
   {
@@ -41,6 +42,7 @@ const MainNavigator = createStackNavigator(
     CounselingBenefits: {screen: CounselingBenefits},
     SuicideCrisis: {screen: SuicideCrisis},
     Goals: {screen: GoalSetter},
+    GoalHistory: {screen: GoalHistory},
     JournalOptions: {screen: JournalOptions},
   },
   {initialRouteName: 'MainScreen'},
