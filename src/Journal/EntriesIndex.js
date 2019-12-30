@@ -50,7 +50,6 @@ class EntriesIndex extends React.Component {
 
     render() {
         const {navigate} = this.props.navigation;
-
         return (
             <View>
                 <FlatList data={this.state.data}
