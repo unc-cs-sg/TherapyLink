@@ -121,10 +121,10 @@ class JournalOptions extends React.Component {
                     searchInputPlaceholderText="What did you feel?"
                     onChangeInput={ (text) => console.log(text) }
                     tagRemoveIconColor="#CCC"
-                    tagBorderColor="rgb(0, 255, 255)"
-                    tagTextColor="rgb(0, 200, 255)"
-                    selectedItemIconColor="rgb(0, 255, 255)"
-                    selectedItemTextColor="rgb(0, 255, 255)"
+                    tagBorderColor="rgb(0, 255, 100)"
+                    tagTextColor="rgb(0, 200, 240)"
+                    selectedItemIconColor="rgb(0, 255, 100)"
+                    selectedItemTextColor="rgb(0, 255, 100)"
                     itemTextColor="#000"
                     displayKey="name"
                     searchInputStyle={{ color: '#CCC' }}
@@ -134,7 +134,7 @@ class JournalOptions extends React.Component {
                 <View>
                     {this.multiSelect ? this.multiSelect.getSelectedItemsExt(selectedItems) : null}
                 </View>
-                <Button title="Save" onPress={() => navigate('Journal', {
+                <Button title="Save" onPress={() => navigate('JournalEntry', {
                     emotions: selectedItems,
                 })}/>
             </View>

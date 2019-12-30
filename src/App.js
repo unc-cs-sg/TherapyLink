@@ -11,7 +11,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 
 import MainScreen from './MainScreen.js';
 import Checkup from './Checkup/Checkup.js';
-import EntriesIndex from './Journal/EntriesIndex.js';
+import JournalEntry from './Journal/JournalEntry.js';
 import Journal from './Journal/Journal.js';
 import JournalOptions from './Journal/JournalOptions.js';
 import Education from './Education.js';
@@ -24,15 +24,16 @@ import Podcasts from './Resources/Podcasts.js';
 import FinancialAssist from './Resources/FinancialAssist.js';
 import CounselingBenefits from './Resources/CounselingBenefits.js';
 import SuicideCrisis from './Resources/SuicideCrisis.js';
-import GoalSetter from './GoalSetterAndTracking/GoalSetter/GoalSetter';
-import GoalHistory from './GoalSetterAndTracking/GoalHistory/GoalHistory';
+import GoalSetter from './GoalSetterAndTracking/GoalSetter/GoalSetter.js';
+import GoalHistory from './GoalSetterAndTracking/GoalHistory/GoalHistory.js';
 
 const MainNavigator = createStackNavigator(
   {
     MainScreen: {screen: MainScreen},
     Checkup: {screen: Checkup},
     Journal: {screen: Journal},
-    EntriesIndex: {screen: EntriesIndex},
+    JournalEntry: {screen: JournalEntry},
+    JournalOptions: {screen: JournalOptions},
     Education: {screen: Education},
     Graphs: {screen: Graphs},
     MoodRating: {screen: MoodRating},
@@ -45,7 +46,6 @@ const MainNavigator = createStackNavigator(
     SuicideCrisis: {screen: SuicideCrisis},
     Goals: {screen: GoalSetter},
     GoalHistory: {screen: GoalHistory},
-    JournalOptions: {screen: JournalOptions},
   },
   {initialRouteName: 'MainScreen'},
 );
