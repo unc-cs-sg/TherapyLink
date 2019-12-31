@@ -37,6 +37,9 @@ class JournalEntry extends React.Component {
     db.transaction(function (txn) {
       console.log(txn);
       // To be removed later to actually maintain a persistent database later on
+      // txn.executeSql(
+      //   "DROP TABLE IF EXISTS Entries"
+      // );
       txn.executeSql(
         "CREATE TABLE IF NOT EXISTS Entries(entry_id INTEGER PRIMARY KEY NOT NULL, title VARCHAR(40), date_added TEXT, user_comment TEXT)",
         []
@@ -66,8 +69,6 @@ class JournalEntry extends React.Component {
     if (hasNegative) {
       return <Text>Will move to second prompt.</Text>;
     } else {
-      console.log(this.props.navigation.getParam('emotions', 'default'));
-      console.log(this.state.hasNegative);
       return <Text>Default Submit</Text>;
     }
   }
@@ -76,31 +77,38 @@ class JournalEntry extends React.Component {
   // and not a new entry, then we update the input boxes with the
   // existing values
   readSelectedEntry = () => {
-      const {navigation} = this.props;
-      let title = navigation.getParam('title', '');
-      let comment = navigation.getParam('comment', '');
-      console.log("title: " + title);
-      console.log("comment: " + comment);
+    const { navigation } = this.props;
+    let title = navigation.getParam('title', '');
+    let comment = navigation.getParam('comment', '');
+    this.setState({ entryTitle: title });
+    this.setState({ userComment: comment });
+  }
+
+  componentDidMount = () => {
+    this.readSelectedEntry();
   }
 
   // TODO: Add input validation to make sure there are no null entries
   render() {
     const { navigate } = this.props.navigation;
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     let negativeString = this.hasNegativeEmotion();
     return (
       <View>
-        <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({ entryTitle: text })} value={navigation.getParam('title', '')} />
+        <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({ entryTitle: text })} value={this.state.entryTitle} />
         <View style={diaryStyles.buttonContainer}>
           <View style={diaryStyles.optionsButtons}>
             <Button title="Feelings" onPress={() => navigate('JournalOptions')} />
           </View>
+
+          {/* Hack-ey way of updating the journal entry index when we
+          return */}
           <View style={diaryStyles.optionsButtons}>
-            <Button title="Submit" onPress={() => { this.addEntry(); navigate('Journal'); }} />
+            <Button title="Submit" onPress={() => { this.addEntry(); navigation.state.params.JournalIndex.refreshComponent(); navigation.goBack(); }} />
           </View>
         </View>
         <Text style={{ paddingHorizontal: 10 }}>Thoughts</Text>
-        <TextInput style={diaryStyles.userComment} placeholder="Describe your thoughts and how you felt." multiline={true} numberOfLines={10} onChangeText={(text) => this.setState({ userComment: text })} value={navigation.getParam('comment', '')} />
+        <TextInput style={diaryStyles.userComment} placeholder="Describe your thoughts and how you felt." multiline={true} numberOfLines={10} onChangeText={(text) => this.setState({ userComment: text })} value={this.state.userComment} />
         <View>{negativeString}</View>
       </View>
     );

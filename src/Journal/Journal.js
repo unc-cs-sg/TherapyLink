@@ -24,6 +24,19 @@ class Journal extends React.Component {
     this.state = {
       data: [],
     };
+  }
+
+  ListSeparator = () => {
+    return (
+      <View style={{ height: 0.2, width: '100%', backgroundColor: '#34c0eb', padding: 5 }} />
+    );
+  }
+
+  static navigationOptions = {
+    title: 'Journal',
+  }
+
+  updateEntryList = () => {
     db.transaction(tx => {
       tx.executeSql("SELECT * FROM Entries", [], (tx, res) => {
         console.log("Query completed.");
@@ -39,22 +52,24 @@ class Journal extends React.Component {
     });
   }
 
-  ListSeparator = () => {
-    return (
-      <View style={{ height: 0.2, width: '100%', backgroundColor: '#34c0eb', padding: 5 }} />
-    );
+  // Workaround to make sure entry list refreshes when we go back from journal entry
+  refreshComponent = () => {
+    console.log("refreshComponent called");
+    this.updateEntryList(); 
   }
 
-  static navigationOptions = {
-    title: 'Journal',
+  componentDidMount = () => {
+    console.log("componentDidMount fired");
+    this.updateEntryList();
   }
 
+  // Don't call setState() in render! This causes an infinite loop xD
   render() {
     const { navigate } = this.props.navigation;
     const { navigation } = this.props;
     return (
-      <View style={{ flex: 1, flexDirection: 'column', backgroundColor: '#34c0eb' }}>
-        <TouchableOpacity style={{ alignSelf: 'flex-end', alignSelf: 'center', position: 'absolute', bottom: 35, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#34ebd6', alignItems: 'center', justifyContent: 'center', zIndex: 1, }} onPress={() => navigate('JournalEntry')}>
+      <View style={{ flex: 1, flexDirection: 'column', backgroundColor: '#34c0eb', paddingVertical: 10, paddingBottom: 100 }}>
+        <TouchableOpacity style={{ alignSelf: 'flex-end', alignSelf: 'center', position: 'absolute', bottom: 35, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#34ebd6', alignItems: 'center', justifyContent: 'center', zIndex: 1, }} onPress={() => navigate('JournalEntry', {JournalIndex: this})}>
           <Icon name="add" color={'#FFF'} />
         </TouchableOpacity>
 
@@ -66,7 +81,7 @@ class Journal extends React.Component {
               <Text>Title: {item.title}</Text>
               <Text>Date Added: {item.date_added}</Text>
               <Text>Comment: {item.user_comment}</Text>
-              <Button title=">" onPress={() => navigation.push('JournalEntry', { title: item.title, comment: item.user_comment })} />
+              <Button title=">" onPress={() => navigate('JournalEntry', { title: item.title, comment: item.user_comment })} />
             </View>
           )}
         />
