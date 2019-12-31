@@ -24,6 +24,19 @@ class Journal extends React.Component {
     this.state = {
       data: [],
     };
+    db.transaction(tx => {
+      tx.executeSql("SELECT * FROM Entries", [], (tx, res) => {
+        console.log("Query completed.");
+        var temp = [];
+        for (let i = 0; i < res.rows.length; ++i) {
+          temp.push(res.rows.item(i));
+        }
+        console.log(temp);
+        this.setState({
+          data: temp,
+        });
+      });
+    });
   }
 
   ListSeparator = () => {
@@ -38,19 +51,7 @@ class Journal extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    db.transaction(tx => {
-      tx.executeSql("SELECT * FROM Entries", [], (tx, res) => {
-        console.log("Query completed.");
-        var temp = [];
-        for (let i = 0; i < res.rows.length; ++i) {
-          temp.push(res.rows.item(i));
-        }
-        console.log(temp);
-        this.setState({
-          data: temp,
-        });
-      });
-    });
+    const { navigation } = this.props;
     return (
       <View style={{ flex: 1, flexDirection: 'column', backgroundColor: '#34c0eb' }}>
         <TouchableOpacity style={{ alignSelf: 'flex-end', alignSelf: 'center', position: 'absolute', bottom: 35, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#34ebd6', alignItems: 'center', justifyContent: 'center', zIndex: 1, }} onPress={() => navigate('JournalEntry')}>
@@ -65,6 +66,7 @@ class Journal extends React.Component {
               <Text>Title: {item.title}</Text>
               <Text>Date Added: {item.date_added}</Text>
               <Text>Comment: {item.user_comment}</Text>
+              <Button title=">" onPress={() => navigation.push('JournalEntry', { title: item.title, comment: item.user_comment })} />
             </View>
           )}
         />

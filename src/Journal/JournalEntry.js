@@ -72,14 +72,25 @@ class JournalEntry extends React.Component {
     }
   }
 
+  // If this is an existing entry we are reading from the main group
+  // and not a new entry, then we update the input boxes with the
+  // existing values
+  readSelectedEntry = () => {
+      const {navigation} = this.props;
+      let title = navigation.getParam('title', '');
+      let comment = navigation.getParam('comment', '');
+      console.log("title: " + title);
+      console.log("comment: " + comment);
+  }
+
   // TODO: Add input validation to make sure there are no null entries
   render() {
     const { navigate } = this.props.navigation;
-    const { navigation } = this.props;
+    const {navigation} = this.props;
     let negativeString = this.hasNegativeEmotion();
     return (
       <View>
-        <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({ entryTitle: text })} value={this.state.entryTitle} />
+        <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({ entryTitle: text })} value={navigation.getParam('title', '')} />
         <View style={diaryStyles.buttonContainer}>
           <View style={diaryStyles.optionsButtons}>
             <Button title="Feelings" onPress={() => navigate('JournalOptions')} />
@@ -89,7 +100,7 @@ class JournalEntry extends React.Component {
           </View>
         </View>
         <Text style={{ paddingHorizontal: 10 }}>Thoughts</Text>
-        <TextInput style={diaryStyles.userComment} placeholder="Describe your thoughts and how you felt." multiline={true} numberOfLines={10} onChangeText={(text) => this.setState({ userComment: text })} value={this.state.userComment} />
+        <TextInput style={diaryStyles.userComment} placeholder="Describe your thoughts and how you felt." multiline={true} numberOfLines={10} onChangeText={(text) => this.setState({ userComment: text })} value={navigation.getParam('comment', '')} />
         <View>{negativeString}</View>
       </View>
     );
