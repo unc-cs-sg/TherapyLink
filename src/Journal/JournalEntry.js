@@ -21,6 +21,7 @@ class JournalEntry extends React.Component {
       entryTitle: '',
       userComment: '',
       momentDate: moment(new Date()).format("MMMM DD"),
+      entryID: 0,
     };
   }
 
@@ -35,7 +36,6 @@ class JournalEntry extends React.Component {
     const { momentDate } = this.state;
 
     db.transaction(function (txn) {
-      console.log(txn);
       // To be removed later to actually maintain a persistent database later on
       // txn.executeSql(
       //   "DROP TABLE IF EXISTS Entries"
@@ -54,6 +54,18 @@ class JournalEntry extends React.Component {
       });
     })
 
+  }
+
+  updateEntry = id => {
+    console.log("Updating Entry...");
+    const { entryTitle } = this.state;
+    const { userComment } = this.state;
+
+    db.transaction(tx => {
+      tx.executeSql(
+        "UPDATE Entries SET title = ?, user_comment = ? WHERE entry_id = ?", [entryTitle, userComment, id]
+      );
+    })
   }
 
   hasNegativeEmotion = () => {
@@ -80,8 +92,11 @@ class JournalEntry extends React.Component {
     const { navigation } = this.props;
     let title = navigation.getParam('title', '');
     let comment = navigation.getParam('comment', '');
+    let id = navigation.getParam('id', 0);
+    console.log("entry_id: " + id);
     this.setState({ entryTitle: title });
     this.setState({ userComment: comment });
+    this.setState({ entryID: id });
   }
 
   componentDidMount = () => {
@@ -104,7 +119,15 @@ class JournalEntry extends React.Component {
           {/* Hack-ey way of updating the journal entry index when we
           return */}
           <View style={diaryStyles.optionsButtons}>
-            <Button title="Submit" onPress={() => { this.addEntry(); navigation.state.params.JournalIndex.refreshComponent(); navigation.goBack(); }} />
+            <Button title="Submit" onPress={() => {
+              if (this.state.entryID !== 0) {
+                this.updateEntry(this.state.entryID);
+              } else {
+                this.addEntry();
+              }
+              navigation.state.params.JournalIndex.refreshComponent(); navigation.goBack();
+            }} />
+
           </View>
         </View>
         <Text style={{ paddingHorizontal: 10 }}>Thoughts</Text>
