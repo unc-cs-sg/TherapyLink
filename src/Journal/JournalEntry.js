@@ -74,15 +74,10 @@ class JournalEntry extends React.Component {
     let hasNegative = false;
     for (let i = 0; i < data.length; ++i) {
       if (data[i] == "1") {
-        hasNegative = true;
+        return true;
       }
     }
-
-    if (hasNegative) {
-      return <Text>Will move to second prompt.</Text>;
-    } else {
-      return <Text>Default Submit</Text>;
-    }
+    return false;
   }
 
   // If this is an existing entry we are reading from the main group
@@ -107,13 +102,13 @@ class JournalEntry extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
     const { navigation } = this.props;
-    let negativeString = this.hasNegativeEmotion();
+
     return (
       <View>
         <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({ entryTitle: text })} value={this.state.entryTitle} />
         <View style={diaryStyles.buttonContainer}>
           <View style={diaryStyles.optionsButtons}>
-            <Button title="Feelings" onPress={() => navigate('JournalOptions')} />
+            <Button title="Feelings" onPress={() => navigate('JournalOptions', { JournalEntry: this })} />
           </View>
 
           {/* Hack-ey way of updating the journal entry index when we
@@ -125,14 +120,20 @@ class JournalEntry extends React.Component {
               } else {
                 this.addEntry();
               }
-              navigation.state.params.JournalIndex.refreshComponent(); navigation.goBack();
+
+              navigation.state.params.JournalIndex.refreshComponent();
+
+              if (this.hasNegativeEmotion()) {
+                  console.log("Negative emotion.");
+              }
+              
+              navigation.goBack();
             }} />
 
           </View>
         </View>
         <Text style={{ paddingHorizontal: 10 }}>Thoughts</Text>
         <TextInput style={diaryStyles.userComment} placeholder="Describe your thoughts and how you felt." multiline={true} numberOfLines={10} onChangeText={(text) => this.setState({ userComment: text })} value={this.state.userComment} />
-        <View>{negativeString}</View>
       </View>
     );
   }

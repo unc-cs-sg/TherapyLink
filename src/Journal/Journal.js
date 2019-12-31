@@ -52,10 +52,18 @@ class Journal extends React.Component {
     });
   }
 
+  removeEntry = id => {
+    db.transaction(tx => {
+      tx.executeSql(
+        "DELETE FROM Entries WHERE entry_id = ?", [id]
+      );
+    });
+  }
+
   // Workaround to make sure entry list refreshes when we go back from journal entry
   refreshComponent = () => {
     console.log("refreshComponent called");
-    this.updateEntryList(); 
+    this.updateEntryList();
   }
 
   componentDidMount = () => {
@@ -69,7 +77,7 @@ class Journal extends React.Component {
     const { navigation } = this.props;
     return (
       <View style={{ flex: 1, flexDirection: 'column', backgroundColor: '#34c0eb', paddingVertical: 10, paddingBottom: 100 }}>
-        <TouchableOpacity style={{ alignSelf: 'flex-end', alignSelf: 'center', position: 'absolute', bottom: 35, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#34ebd6', alignItems: 'center', justifyContent: 'center', zIndex: 1, }} onPress={() => navigate('JournalEntry', {JournalIndex: this})}>
+        <TouchableOpacity style={{ alignSelf: 'flex-end', alignSelf: 'center', position: 'absolute', bottom: 35, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#34ebd6', alignItems: 'center', justifyContent: 'center', zIndex: 1, }} onPress={() => navigate('JournalEntry', { JournalIndex: this })}>
           <Icon name="add" color={'#FFF'} />
         </TouchableOpacity>
 
@@ -82,6 +90,7 @@ class Journal extends React.Component {
               <Text>Date Added: {item.date_added}</Text>
               <Text>Comment: {item.user_comment}</Text>
               <Button title=">" onPress={() => navigate('JournalEntry', { JournalIndex: this, title: item.title, comment: item.user_comment, id: item.entry_id })} />
+              <Button title="x" onPress={() => { this.removeEntry(item.entry_id); this.refreshComponent(); }} />
             </View>
           )}
         />
