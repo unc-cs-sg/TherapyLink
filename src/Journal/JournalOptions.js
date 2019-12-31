@@ -9,7 +9,7 @@ import MultiSelect from 'react-native-multiple-select';
 
 const items = [
     {
-        id: 'Angry',
+        id: '0',
         name: 'Angry',
     },
     {
@@ -93,12 +93,24 @@ const items = [
 class JournalOptions extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { selectedItems: [], };
+        this.state = { selectedItems: [], selectedItemNames: [], };
+        // console.log("item[0]: " + items[0].isNeg);
     }
 
     static navigationOptions = {
         title: 'How did you feel?',
     };
+
+    onSelectedItemsSubmit = () => {
+        const { selectedItems } = this.state;
+        console.log(selectedItems);
+
+        selectedItems.forEach(val => {
+            this.setState(prevState => ({ selectedItemNames: [...prevState.selectedItemNames, items[val].name] 
+            }));
+            console.log(items[val]);
+        });
+    }
 
     onSelectedItemsChange = selectedItems => {
         this.setState({ selectedItems });
@@ -108,6 +120,7 @@ class JournalOptions extends React.Component {
     render() {
         const { navigate } = this.props.navigation;
         const { selectedItems } = this.state;
+        console.log("onSelectedItemsSubmit.state: " + this.state.selectedItemNames);
         return (
             <View style={{ flex: 1, paddingHorizontal: 20 }}>
                 <MultiSelect
@@ -135,9 +148,10 @@ class JournalOptions extends React.Component {
                     {this.multiSelect ? this.multiSelect.getSelectedItemsExt(selectedItems) : null}
                 </View>
                 <Button title="Save" onPress={() => {
-                    navigate('JournalEntry', {
-                        emotions: selectedItems,
-                    })
+                    this.onSelectedItemsSubmit();
+                    // navigate('JournalEntry', {
+                    //     emotions: this.state.selectedItemNames,
+                    // })
                 }} />
             </View>
         )

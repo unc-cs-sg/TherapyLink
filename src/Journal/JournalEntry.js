@@ -71,9 +71,10 @@ class JournalEntry extends React.Component {
   hasNegativeEmotion = () => {
     const { navigation } = this.props;
     let data = navigation.getParam('emotions', 'default');
+    console.log("hasNegativeEmotion.data: " + data);
     let hasNegative = false;
     for (let i = 0; i < data.length; ++i) {
-      if (data[i] == "1") {
+      if (data[i] == "Anxious") {
         return true;
       }
     }
