@@ -22,6 +22,7 @@ class JournalEntry extends React.Component {
       userComment: '',
       momentDate: moment(new Date()).format("MMMM DD"),
       entryID: 0,
+      emotions: [],
     };
   }
 
@@ -46,13 +47,7 @@ class JournalEntry extends React.Component {
       );
 
       txn.executeSql("INSERT INTO Entries (title, date_added, user_comment) VALUES (?, ?, ?)", [entryTitle, momentDate, userComment]);
-
-      txn.executeSql("SELECT * FROM Entries", [], function (tx, res) {
-        for (let i = 0; i < res.rows.length; ++i) {
-          console.log("entry: ", res.rows.item(i));
-        }
-      });
-    })
+    });
 
   }
 
@@ -68,13 +63,16 @@ class JournalEntry extends React.Component {
     })
   }
 
+  emotionDataCallback = vals => {
+    this.setState({ emotions: vals });
+  }
+
   hasNegativeEmotion = () => {
     const { navigation } = this.props;
     let data = navigation.getParam('emotions', 'default');
     console.log("hasNegativeEmotion.data: " + data);
-    let hasNegative = false;
     for (let i = 0; i < data.length; ++i) {
-      if (data[i] == "Anxious") {
+      if (data[i].isNeg) {
         return true;
       }
     }
@@ -95,6 +93,9 @@ class JournalEntry extends React.Component {
     this.setState({ entryID: id });
   }
 
+  // componentDidMount will be called after all the DOM elements
+  // are rendered correctly on the page. This will only be called
+  // once
   componentDidMount = () => {
     this.readSelectedEntry();
   }
@@ -109,7 +110,7 @@ class JournalEntry extends React.Component {
         <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({ entryTitle: text })} value={this.state.entryTitle} />
         <View style={diaryStyles.buttonContainer}>
           <View style={diaryStyles.optionsButtons}>
-            <Button title="Feelings" onPress={() => navigate('JournalOptions', { JournalEntry: this })} />
+            <Button title="Feelings" onPress={() => navigate('JournalOptions', { JournalEntry: this, callback: this.emotionDataCallback })} />
           </View>
 
           {/* Hack-ey way of updating the journal entry index when we
@@ -125,9 +126,9 @@ class JournalEntry extends React.Component {
               navigation.state.params.JournalIndex.refreshComponent();
 
               if (this.hasNegativeEmotion()) {
-                  console.log("Negative emotion.");
+                console.log("Negative emotion.");
               }
-              
+
               navigation.goBack();
             }} />
 

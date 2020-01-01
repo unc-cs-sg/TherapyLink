@@ -11,89 +11,109 @@ const items = [
     {
         id: '0',
         name: 'Angry',
+        isNeg: true,
     },
     {
         id: '1',
         name: 'Anxious',
+        isNeg: true,
     },
     {
         id: '2',
         name: 'Ashamed',
+        isNeg: true,
     },
     {
         id: '3',
         name: 'Awkward',
+        isNeg: true,
     },
     {
         id: '4',
         name: 'Calm',
+        isNeg: false,
     },
     {
         id: '5',
         name: 'Confused',
+        isNeg: true,
     },
     {
         id: '6',
         name: 'Disgusted',
+        isNeg: true,
     },
     {
         id: '7',
         name: 'Empty',
+        isNeg: true,
     },
     {
         id: '8',
         name: 'Excited',
+        isNeg: false,
     },
     {
         id: '9',
         name: 'Guilty',
+        isNeg: true,
     },
     {
         id: '10',
         name: 'Happy',
+        isNeg: false,
     },
     {
         id: '11',
         name: 'Hopeful',
+        isNeg: false,
     },
     {
         id: '12',
         name: 'Hopeless',
+        isNeg: true,
     },
     {
         id: '13',
         name: 'Jealous',
+        isNeg: true,
     },
     {
         id: '14',
         name: 'Motivated',
+        isNeg: false,
     },
     {
         id: '15',
         name: 'Overwhelmed',
+        isNeg: true,
     },
     {
         id: '16',
         name: 'Sad',
+        isNeg: true,
     },
     {
         id: '17',
         name: 'Scared',
+        isNeg: true,
     },
     {
         id: '18',
         name: 'Surprised',
+        isNeg: false,
     },
     {
         id: '19',
         name: 'Worthless',
+        isNeg: true,
     },
 ];
 
 class JournalOptions extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { selectedItems: [], selectedItemNames: [], };
+        this.state = { selectedItems: [], selectedItemObjects: [], };
         // console.log("item[0]: " + items[0].isNeg);
     }
 
@@ -103,12 +123,11 @@ class JournalOptions extends React.Component {
 
     onSelectedItemsSubmit = () => {
         const { selectedItems } = this.state;
-        console.log(selectedItems);
 
         selectedItems.forEach(val => {
-            this.setState(prevState => ({ selectedItemNames: [...prevState.selectedItemNames, items[val].name] 
+            this.setState(prevState => ({
+                selectedItemObjects: [...prevState.selectedItemObjects, items[val]]
             }));
-            console.log(items[val]);
         });
     }
 
@@ -117,10 +136,22 @@ class JournalOptions extends React.Component {
         console.log(selectedItems);
     };
 
+    // componentDidUpdate will not be called on initial render
+    // This method is called whenever the state changes following
+    // initial render. VERY USEFUL FOR THIS CURRENT CASE 
+    componentDidUpdate = (prevProps, prevState) => {
+        const { navigate } = this.props.navigation;
+        if (prevState.selectedItemObjects !== this.state.selectedItemObjects) {
+            console.log("selectedItemObjects updated!");
+            console.log(this.state.selectedItemObjects);
+            navigate('JournalEntry', { emotions: this.state.selectedItemObjects });
+        }
+    }
+
     render() {
         const { navigate } = this.props.navigation;
         const { selectedItems } = this.state;
-        console.log("onSelectedItemsSubmit.state: " + this.state.selectedItemNames);
+
         return (
             <View style={{ flex: 1, paddingHorizontal: 20 }}>
                 <MultiSelect
@@ -149,9 +180,6 @@ class JournalOptions extends React.Component {
                 </View>
                 <Button title="Save" onPress={() => {
                     this.onSelectedItemsSubmit();
-                    // navigate('JournalEntry', {
-                    //     emotions: this.state.selectedItemNames,
-                    // })
                 }} />
             </View>
         )
