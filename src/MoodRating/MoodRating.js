@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Slider from '@react-native-community/slider';
+import SQLite from "react-native-sqlite-2";
 
 import {
   Button,
@@ -13,6 +14,20 @@ import {
 
 import { colors, moodRatingStyles } from '../styles/MoodRatingStyles.js';
 
+const months = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
+var dateString;
+
+const moodMessages = [
+  "Sorry to hear you're not having a great day. Hang in there!",
+  "Things might be a little rough right now, but you got it!",
+  "Hope your day gets even better from here!",
+  "Glad things are going well! Keep killing it!",
+  "It's awesome that you're having such a great day! Let's make tomorrow even better!"
+]
+
+const db = SQLite.openDatabase("test.db", "1.0", "Mood Ratings Test Database", 1);
+
 class MoodRating extends React.Component {
   constructor(props){
       super(props);
@@ -24,38 +39,57 @@ class MoodRating extends React.Component {
     title: 'Mood Rating',
   };
 
-  updateMood(value) {
-    this.setState({mood:value});
+  updateMoodLocal(value) {
+    this.setState({mood: value});
   }
 
-  generateSaveMessage(value) {
+  saveMood(mood) {
+    db.transaction(function (txn) {
+      txn.executeSql(
+        "INSERT INTO DailyMoods (mood, date) VALUES (?, ?)", [mood, dateString]
+      );
+    })
+    this.generateSaveMessage(mood, "saved");
+  }
+
+  updateMoodDB(mood) {
+    db.transaction(tx => {
+      tx.executeSql(
+        "UPDATE DailyMoods SET mood = ?, WHERE date = ?", [mood, dateString]
+      );
+    })
+    this.generateSaveMessage(mood, "updated");
+  }
+
+  addOrUpdate(mood) {
+    const mr = this;
+    db.transaction(function(txn) {
+      // TODO: Delete the drop table part. Currently using this for testing.
+//      txn.executeSql(
+//        "DROP TABLE IF EXISTS DailyMoods"
+//      );
+      txn.executeSql(
+        "CREATE TABLE IF NOT EXISTS DailyMoods(mood_id INTEGER PRIMARY KEY NOT NULL, mood INTEGER, date TEXT)",
+        []
+      );
+      txn.executeSql("SELECT * FROM DailyMoods WHERE date = ?", [dateString], function (tx, res) {
+        if (res.rows.length > 0) {
+          mr.updateMoodDB(mood);
+        } else {
+          mr.saveMood(mood);
+        }
+      });
+    })
+  }
+
+  async generateSaveMessage(value, saved) {
     // Date
-    const months = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"];
     var date = new Date();
-    var dateString = months[date.getMonth()] + " " + date.getDate().toString();
+    dateString = months[date.getMonth()] + " " + date.getDate().toString() + ", " + (date.getYear() + 1900);
 
     // Message based on mood
-    var moodMessage;
-    switch (value) {
-      case 1:
-        moodMessage = "Sorry to hear you're not having a great day. Hang in there!";
-        break;
-      case 2:
-        moodMessage = "Things might be a little rough right now, but you got it!";
-        break;
-      case 3:
-        moodMessage = "Hope your day gets even better from here!";
-        break;
-      case 4:
-        moodMessage = "Glad things are going well! Keep killing it!";
-        break;
-      case 5:
-        moodMessage = "It's awesome that you're having such a great day! Let's make tomorrow even better!";
-        break;
-    }
-    Alert.alert("Your " + dateString + " mood has been saved.",
-        moodMessage,
+    Alert.alert("Your " + dateString + " mood has been " + saved + ".",
+        moodMessages[this.state.mood - 1],
         [{text: 'OK'}]
     );
   }
@@ -96,14 +130,14 @@ class MoodRating extends React.Component {
             maximumValue={5}
             minimumTrackTintColor={colors.trackTint}
             step={1}
-            onValueChange={value => this.setState({ mood: value })}
+            onValueChange={value => this.updateMoodLocal(value)}
           />
           <Text>{ blankLine }</Text>
           <View style={{width: 100}}>
             <Button
               title="Save"
               color={colors.trackTint}
-              onPress={() => this.generateSaveMessage(this.state.mood)}
+              onPress={() => this.addOrUpdate(this.state.mood)}
             />
           </View>
         </View>
