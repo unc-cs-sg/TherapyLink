@@ -63,10 +63,6 @@ class JournalEntry extends React.Component {
     })
   }
 
-  emotionDataCallback = vals => {
-    this.setState({ emotions: vals });
-  }
-
   hasNegativeEmotion = () => {
     const { navigation } = this.props;
     let data = navigation.getParam('emotions', 'default');
@@ -110,7 +106,7 @@ class JournalEntry extends React.Component {
         <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({ entryTitle: text })} value={this.state.entryTitle} />
         <View style={diaryStyles.buttonContainer}>
           <View style={diaryStyles.optionsButtons}>
-            <Button title="Feelings" onPress={() => navigate('JournalOptions', { JournalEntry: this, callback: this.emotionDataCallback })} />
+            <Button title="Feelings" onPress={() => navigate('JournalOptions', { JournalEntry: this, })} />
           </View>
 
           {/* Hack-ey way of updating the journal entry index when we
