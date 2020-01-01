@@ -1,3 +1,5 @@
+// NOTE: This currently isn't being used for anything.
+
 import React, { Component } from "react";
 import { View } from "react-native";
 import RadioForm, {RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';

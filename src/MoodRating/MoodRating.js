@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import Slider from '@react-native-community/slider';
-import RadioForm, { RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 import {
   Button,
@@ -8,10 +7,10 @@ import {
   Text,
   Modal,
   StyleSheet,
-  Alert
+  Alert,
+  Image
 } from 'react-native';
 
-import RadioButton from './RadioButton.js';
 import { colors, moodRatingStyles } from '../styles/MoodRatingStyles.js';
 
 class MoodRating extends React.Component {
@@ -40,7 +39,6 @@ class MoodRating extends React.Component {
     var date = new Date();
     var dateString = months[date.getMonth()] + " " + date.getDate().toString();
 
-    /* TODO: Use the emojis instead of placeholder text icons */
     return (
     <View>
       <Button title="Go Home" onPress={() => navigate('MainScreen')} />
@@ -50,12 +48,12 @@ class MoodRating extends React.Component {
         <Text>{ blankLine}</Text>
 
         <View style={{alignItems: "center"}}>
-          <View style={moodRatingStyles.row}>
-            <Text>D:</Text>
-            <Text>:(</Text>
-            <Text>:|</Text>
-            <Text>:)</Text>
-            <Text>:D</Text>
+          <View style={moodRatingStyles.emojiRow}>
+            <Image source={require('../assets/MoodRating/Emoji_1.png')} />
+            <Image source={require('../assets/MoodRating/Emoji_2.png')} />
+            <Image source={require('../assets/MoodRating/Emoji_3.png')} />
+            <Image source={require('../assets/MoodRating/Emoji_4.png')} />
+            <Image source={require('../assets/MoodRating/Emoji_5.png')} />
           </View>
           <View style={moodRatingStyles.row}>
             <Text>1</Text>

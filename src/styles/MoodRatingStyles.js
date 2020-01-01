@@ -11,8 +11,12 @@ const moodRatingStyles = StyleSheet.create({
     backgroundColor: colors.mRBlue,
     width: "100%",
     height: "100%",
-    padding: 15,
-    justifyContent: "center"
+    padding: 15
+  },
+  emojiRow: {
+    width: "100%",
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   row: {
     width: "93%",
