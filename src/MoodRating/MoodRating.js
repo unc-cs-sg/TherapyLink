@@ -14,12 +14,12 @@ import {
 import { colors, moodRatingStyles } from '../styles/MoodRatingStyles.js';
 
 class MoodRating extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            mood: 3
-        }
-    }
+  constructor(props){
+      super(props);
+      this.state = {
+          mood: 3
+      }
+  }
   static navigationOptions = {
     title: 'Mood Rating',
   };
@@ -28,16 +28,44 @@ class MoodRating extends React.Component {
     this.setState({mood:value});
   }
 
+  generateSaveMessage(value) {
+    // Date
+    const months = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
+    var date = new Date();
+    var dateString = months[date.getMonth()] + " " + date.getDate().toString();
+
+    // Message based on mood
+    var moodMessage;
+    switch (value) {
+      case 1:
+        moodMessage = "Sorry to hear you're not having a great day. Hang in there!";
+        break;
+      case 2:
+        moodMessage = "Things might be a little rough right now, but you got it!";
+        break;
+      case 3:
+        moodMessage = "Hope your day gets even better from here!";
+        break;
+      case 4:
+        moodMessage = "Glad things are going well! Keep killing it!";
+        break;
+      case 5:
+        moodMessage = "It's awesome that you're having such a great day! Let's make tomorrow even better!";
+        break;
+    }
+    Alert.alert("Your " + dateString + " mood has been saved.",
+        moodMessage,
+        [{text: 'OK'}]
+    );
+  }
+
   render(){
     const {navigate} = this.props.navigation;
     const userName = "Temp"; /* TODO: Get the user's actual name */
     const greeting = "Hi, " + userName + "! It's nice to see you again!";
     const feeling = "How are you feeling today?";
     const blankLine = "";
-    const months = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"]
-    var date = new Date();
-    var dateString = months[date.getMonth()] + " " + date.getDate().toString();
 
     return (
     <View>
@@ -68,14 +96,14 @@ class MoodRating extends React.Component {
             maximumValue={5}
             minimumTrackTintColor={colors.trackTint}
             step={1}
-            onValueChange={value => this.setState({ value })}
+            onValueChange={value => this.setState({ mood: value })}
           />
           <Text>{ blankLine }</Text>
           <View style={{width: 100}}>
             <Button
               title="Save"
               color={colors.trackTint}
-              onPress={() => Alert.alert("Your " + dateString + " mood has been saved.")}
+              onPress={() => this.generateSaveMessage(this.state.mood)}
             />
           </View>
         </View>
