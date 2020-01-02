@@ -89,6 +89,7 @@ class Journal extends React.Component {
               <Text>Title: {item.title}</Text>
               <Text>Date Added: {item.date_added}</Text>
               <Text>Comment: {item.user_comment}</Text>
+              <Text>Emotions: {item.emotions}</Text>
               <Button title=">" onPress={() => navigate('JournalEntry', { JournalIndex: this, title: item.title, comment: item.user_comment, id: item.entry_id })} />
               <Button title="x" onPress={() => { this.removeEntry(item.entry_id); this.refreshComponent(); }} />
             </View>

@@ -144,6 +144,7 @@ class JournalOptions extends React.Component {
         if (prevState.selectedItemObjects !== this.state.selectedItemObjects) {
             console.log("selectedItemObjects updated!");
             console.log(this.state.selectedItemObjects);
+            // this.props.navigation.state.params.JournalEntry.refreshComponent(selectedItemObjects);
             navigate('JournalEntry', { emotions: this.state.selectedItemObjects });
         }
     }
