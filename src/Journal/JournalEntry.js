@@ -22,7 +22,6 @@ class JournalEntry extends React.Component {
       userComment: '',
       momentDate: moment(new Date()).format("MMMM DD"),
       entryID: 0,
-      emotions: [],
     };
   }
 
@@ -31,30 +30,37 @@ class JournalEntry extends React.Component {
   };
 
   addEntry = () => {
-    console.log("Adding Entry...");
-    const { entryTitle } = this.state;
-    const { userComment } = this.state;
-    const { momentDate } = this.state;
+    const { entryTitle, userComment, momentDate } = this.state;
+    let emotionData = this.props.navigation.getParam('emotions', 'default');
+    let emotionsArray = [];
+    console.log("emotions: " + this.props.navigation.getParam('emotions', 'default'));
+
+    if (emotionData !== 'default') {
+      for (let i = 0; i < emotionData.length; ++i) {
+        emotionsArray.push(emotionData[i].name);
+      }
+      console.log("emotionsArray: " + emotionsArray);
+    }
 
     db.transaction(function (txn) {
       // To be removed later to actually maintain a persistent database later on
       // txn.executeSql(
-      //   "DROP TABLE IF EXISTS Entries"
+      //   "DROP TABLE Entries"
       // );
       txn.executeSql(
-        "CREATE TABLE IF NOT EXISTS Entries(entry_id INTEGER PRIMARY KEY NOT NULL, title VARCHAR(40), date_added TEXT, user_comment TEXT)",
+        "CREATE TABLE IF NOT EXISTS Entries(entry_id INTEGER PRIMARY KEY NOT NULL, title VARCHAR(40), date_added TEXT, user_comment TEXT, emotions TEXT)",
         []
       );
 
-      txn.executeSql("INSERT INTO Entries (title, date_added, user_comment) VALUES (?, ?, ?)", [entryTitle, momentDate, userComment]);
+      txn.executeSql(
+        "INSERT INTO Entries(title, date_added, user_comment, emotions) VALUES (?, ?, ?, ?)", [entryTitle, momentDate, userComment, emotionsArray.toString()]
+      );
     });
 
   }
 
   updateEntry = id => {
-    console.log("Updating Entry...");
-    const { entryTitle } = this.state;
-    const { userComment } = this.state;
+    const { entryTitle, userComment } = this.state;
 
     db.transaction(tx => {
       tx.executeSql(
@@ -84,9 +90,11 @@ class JournalEntry extends React.Component {
     let comment = navigation.getParam('comment', '');
     let id = navigation.getParam('id', 0);
     console.log("entry_id: " + id);
-    this.setState({ entryTitle: title });
-    this.setState({ userComment: comment });
-    this.setState({ entryID: id });
+    this.setState({
+      entryTitle: title,
+      userComment: comment,
+      entryID: id
+    });
   }
 
   // componentDidMount will be called after all the DOM elements
@@ -106,7 +114,7 @@ class JournalEntry extends React.Component {
         <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({ entryTitle: text })} value={this.state.entryTitle} />
         <View style={diaryStyles.buttonContainer}>
           <View style={diaryStyles.optionsButtons}>
-            <Button title="Feelings" onPress={() => navigate('JournalOptions', { JournalEntry: this, })} />
+            <Button title="Feelings" onPress={() => navigate('JournalOptions', { JournalEntry: this })} />
           </View>
 
           {/* Hack-ey way of updating the journal entry index when we
@@ -123,9 +131,11 @@ class JournalEntry extends React.Component {
 
               if (this.hasNegativeEmotion()) {
                 console.log("Negative emotion.");
+                navigate('NegativeEmotionPanel');
+              } else {
+                navigation.goBack();
               }
 
-              navigation.goBack();
             }} />
 
           </View>
