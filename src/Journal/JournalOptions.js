@@ -114,7 +114,6 @@ class JournalOptions extends React.Component {
     constructor(props) {
         super(props);
         this.state = { selectedItems: [], selectedItemObjects: [], };
-        // console.log("item[0]: " + items[0].isNeg);
     }
 
     static navigationOptions = {

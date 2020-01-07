@@ -22,42 +22,13 @@ class JournalEntry extends React.Component {
       userComment: '',
       momentDate: moment(new Date()).format("MMMM DD"),
       entryID: 0,
+      emotionState: [],
     };
   }
 
   static navigationOptions = {
     title: 'JournalEntry',
   };
-
-  addEntry = () => {
-    const { entryTitle, userComment, momentDate } = this.state;
-    let emotionData = this.props.navigation.getParam('emotions', 'default');
-    let emotionsArray = [];
-    console.log("emotions: " + this.props.navigation.getParam('emotions', 'default'));
-
-    if (emotionData !== 'default') {
-      for (let i = 0; i < emotionData.length; ++i) {
-        emotionsArray.push(emotionData[i].name);
-      }
-      console.log("emotionsArray: " + emotionsArray);
-    }
-
-    db.transaction(function (txn) {
-      // To be removed later to actually maintain a persistent database later on
-      // txn.executeSql(
-      //   "DROP TABLE Entries"
-      // );
-      txn.executeSql(
-        "CREATE TABLE IF NOT EXISTS Entries(entry_id INTEGER PRIMARY KEY NOT NULL, title VARCHAR(40), date_added TEXT, user_comment TEXT, emotions TEXT)",
-        []
-      );
-
-      txn.executeSql(
-        "INSERT INTO Entries(title, date_added, user_comment, emotions) VALUES (?, ?, ?, ?)", [entryTitle, momentDate, userComment, emotionsArray.toString()]
-      );
-    });
-
-  }
 
   updateEntry = id => {
     const { entryTitle, userComment } = this.state;
@@ -93,8 +64,23 @@ class JournalEntry extends React.Component {
     this.setState({
       entryTitle: title,
       userComment: comment,
-      entryID: id
+      entryID: id,
     });
+  }
+
+  onSubmit = () => {
+    const { navigation } = this.props;
+    let emotionData = navigation.getParam('emotions', null);
+
+    if (emotionData !== null) {
+      for (let i = 0; i < emotionData.length; ++i) {
+        this.setState(prevState => ({
+          emotionState: [...prevState.emotionState, emotionData[i].name]
+        }));
+      }
+    } else {
+      alert("Please record how you felt first.")
+    }
   }
 
   // componentDidMount will be called after all the DOM elements
@@ -102,6 +88,19 @@ class JournalEntry extends React.Component {
   // once
   componentDidMount = () => {
     this.readSelectedEntry();
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    const { navigate } = this.props.navigation;
+    if (prevState.emotionState !== this.state.emotionState) {
+      console.log("emotionState updated!");
+      if (this.hasNegativeEmotion()) {
+        console.log("Negative emotion.");
+        navigate('NegativeEmotionPanel', { JournalEntry: this });
+      } else {
+        navigate('JournalSummary', { JournalEntry: this });
+      }
+    }
   }
 
   // TODO: Add input validation to make sure there are no null entries
@@ -120,22 +119,14 @@ class JournalEntry extends React.Component {
           {/* Hack-ey way of updating the journal entry index when we
           return */}
           <View style={diaryStyles.optionsButtons}>
+            {/* Will have to call addEntry in the JournalSummary panel later */}
             <Button title="Submit" onPress={() => {
               if (this.state.entryID !== 0) {
                 this.updateEntry(this.state.entryID);
-              } else {
-                this.addEntry();
-              }
+              } 
 
+              this.onSubmit();
               navigation.state.params.JournalIndex.refreshComponent();
-
-              if (this.hasNegativeEmotion()) {
-                console.log("Negative emotion.");
-                navigate('NegativeEmotionPanel');
-              } else {
-                navigation.goBack();
-              }
-
             }} />
 
           </View>
