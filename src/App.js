@@ -20,6 +20,7 @@ import JournalSummary from './Journal/JournalSummary';
 import Education from './Education.js';
 import Graphs from './Graphs.js';
 import MoodRating from './MoodRating/MoodRating.js';
+import MoodRatingGraph from './Graphs/MoodRatingGraph.js';
 import Resources from './Resources/Resources.js';
 import MentalHealthInfo from './Resources/MentalHealthInfo.js';
 import FindATherapist from './Resources/FindATherapist.js';
@@ -43,6 +44,7 @@ const MainNavigator = createStackNavigator(
     Education: { screen: Education },
     Graphs: { screen: Graphs },
     MoodRating: { screen: MoodRating },
+    MoodRatingGraph: { screen: MoodRatingGraph },
     Resources: { screen: Resources },
     MentalHealthInfo: { screen: MentalHealthInfo },
     FindATherapist: { screen: FindATherapist },

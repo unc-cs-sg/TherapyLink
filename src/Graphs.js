@@ -11,6 +11,8 @@ import {
   LineChart
 } from 'react-native-chart-kit';
 
+import { graphStyles } from './styles/GraphStyles.js';
+
 
 class Graphs extends React.Component {
   static navigationOptions = {
@@ -18,6 +20,7 @@ class Graphs extends React.Component {
   };
 
   render() {
+    const { navigate } = this.props.navigation;
 
     return(
 
@@ -62,6 +65,9 @@ class Graphs extends React.Component {
             }}
 
           />
+          <View style={graphStyles.navButtons}>
+            <Button title="Mood History" onPress={() => navigate('MoodRatingGraph')} />
+          </View>
         </View>
     );
   }
