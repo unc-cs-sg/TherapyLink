@@ -24,7 +24,7 @@ export default class Question extends Component {
     ));
     return (
       <View>
-        <Text>{this.props.question}</Text>
+        <Text style={{padding: 10}}>{this.props.question}</Text>
         {buttons}
       </View>
     );
