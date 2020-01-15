@@ -32,7 +32,7 @@ class MoodRating extends React.Component {
   constructor(props){
       super(props);
       this.state = {
-          mood: 3
+          mood: 0
       }
   }
   static navigationOptions = {
@@ -104,7 +104,7 @@ class MoodRating extends React.Component {
   render(){
     const {navigate} = this.props.navigation;
     const userName = "Temp"; /* TODO: Get the user's actual name */
-    const greeting = "Hi, " + userName + "! It's nice to see you again!";
+    const greeting = "Hi, " + userName + "! It's nice to see you today!";
     const feeling = "How are you feeling today?";
     const blankLine = "";
 
@@ -118,13 +118,17 @@ class MoodRating extends React.Component {
 
         <View style={{alignItems: "center"}}>
           <View style={moodRatingStyles.emojiRow}>
-            <Image source={require('../assets/MoodRating/Emoji_1.png')} />
-            <Image source={require('../assets/MoodRating/Emoji_2.png')} />
-            <Image source={require('../assets/MoodRating/Emoji_3.png')} />
-            <Image source={require('../assets/MoodRating/Emoji_4.png')} />
-            <Image source={require('../assets/MoodRating/Emoji_5.png')} />
+            <Image style={[moodRatingStyles.emoji, moodRatingStyles.invisible]}
+              source={require('../assets/MoodRating/1_Emoji.png')}
+            />
+            <Image style={moodRatingStyles.emoji} source={require('../assets/MoodRating/1_Emoji.png')} />
+            <Image style={moodRatingStyles.emoji} source={require('../assets/MoodRating/2_Emoji.png')} />
+            <Image style={moodRatingStyles.emoji} source={require('../assets/MoodRating/3_Emoji.png')} />
+            <Image style={moodRatingStyles.emoji} source={require('../assets/MoodRating/4_Emoji.png')} />
+            <Image style={moodRatingStyles.emoji} source={require('../assets/MoodRating/5_Emoji.png')} />
           </View>
           <View style={moodRatingStyles.row}>
+            <Text style={moodRatingStyles.invisible}>0</Text>
             <Text>1</Text>
             <Text>2</Text>
             <Text>3</Text>
@@ -133,7 +137,7 @@ class MoodRating extends React.Component {
           </View>
           <Slider style={moodRatingStyles.moodScale}
             value={this.state.mood}
-            minimumValue={1}
+            minimumValue={0}
             maximumValue={5}
             minimumTrackTintColor={colors.trackTint}
             step={1}
@@ -142,22 +146,26 @@ class MoodRating extends React.Component {
           <Text>{ blankLine }</Text>
           <View style={{width: 100}}>
             <Button
+              disabled={this.state.mood == 0}
               title="Save"
               color={colors.trackTint}
               onPress={() => this.addOrUpdate(this.state.mood)}
             />
             <Text> </Text>
-            <Button
-              title="Drop Table"
-              color={colors.trackTint}
-              onPress={() => this.dropTable()}
-            />
           </View>
         </View>
       </View>
     </View>
     );
   }
+
+  /* If you need to delete the SQLite table for testing, you can copy and
+     paste this button somewhere on the screen to save time. */
+//  <Button
+//    title="Drop Table"
+//    color={colors.trackTint}
+//    onPress={() => this.dropTable()}
+//  />
 
 }
 
