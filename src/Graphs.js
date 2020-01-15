@@ -4,6 +4,8 @@ import {Button, Dimensions, View, Text} from 'react-native';
 
 import {LineChart} from 'react-native-chart-kit';
 
+import { graphStyles } from './styles/GraphStyles.js';
+
 import SQLite from 'react-native-sqlite-2';
 
 const db = SQLite.openDatabase('test.db', '1.0', '', 1);
@@ -72,6 +74,9 @@ class Graphs extends React.Component {
             },
           }}
         />
+        <View style={graphStyles.navButtons}>
+          <Button title="Mood History" onPress={() => navigate('MoodRatingGraph')} />
+        </View>
       </View>
     );
   }

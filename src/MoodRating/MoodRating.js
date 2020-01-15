@@ -26,7 +26,7 @@ const moodMessages = [
   "It's awesome that you're having such a great day! Let's make tomorrow even better!"
 ]
 
-const db = SQLite.openDatabase("test.db", "1.0", "Mood Ratings Test Database", 1);
+export const db = SQLite.openDatabase("test.db", "1.0", "Mood Ratings Test Database", 1);
 
 class MoodRating extends React.Component {
   constructor(props){
@@ -55,7 +55,7 @@ class MoodRating extends React.Component {
   updateMoodDB(mood) {
     db.transaction(tx => {
       tx.executeSql(
-        "UPDATE DailyMoods SET mood = ?, WHERE date = ?", [mood, dateString]
+        "UPDATE DailyMoods SET mood = ? WHERE date = ?", [mood, dateString]
       );
     })
     this.generateSaveMessage(mood, "updated");
@@ -63,13 +63,14 @@ class MoodRating extends React.Component {
 
   addOrUpdate(mood) {
     const mr = this;
+
+    // Date
+    var date = new Date();
+    dateString = months[date.getMonth()] + " " + date.getDate().toString() + ", " + (date.getYear() + 1900);
+
     db.transaction(function(txn) {
-      // TODO: Delete the drop table part. Currently using this for testing.
-//      txn.executeSql(
-//        "DROP TABLE IF EXISTS DailyMoods"
-//      );
       txn.executeSql(
-        "CREATE TABLE IF NOT EXISTS DailyMoods(mood_id INTEGER PRIMARY KEY NOT NULL, mood INTEGER, date TEXT)",
+        "CREATE TABLE IF NOT EXISTS DailyMoods(mood INTEGER NOT NULL, date TEXT NOT NULL, PRIMARY KEY (date))",
         []
       );
       txn.executeSql("SELECT * FROM DailyMoods WHERE date = ?", [dateString], function (tx, res) {
@@ -82,11 +83,17 @@ class MoodRating extends React.Component {
     })
   }
 
-  async generateSaveMessage(value, saved) {
-    // Date
-    var date = new Date();
-    dateString = months[date.getMonth()] + " " + date.getDate().toString() + ", " + (date.getYear() + 1900);
+  // TODO: Delete this and the corresponding button. This is just for testing.
+  dropTable() {
+    db.transaction(function(txn) {
+      txn.executeSql(
+        "DROP TABLE IF EXISTS DailyMoods"
+      );
+      alert("Table dropped");
+    })
+  }
 
+  async generateSaveMessage(value, saved) {
     // Message based on mood
     Alert.alert("Your " + dateString + " mood has been " + saved + ".",
         moodMessages[this.state.mood - 1],
@@ -138,6 +145,12 @@ class MoodRating extends React.Component {
               title="Save"
               color={colors.trackTint}
               onPress={() => this.addOrUpdate(this.state.mood)}
+            />
+            <Text> </Text>
+            <Button
+              title="Drop Table"
+              color={colors.trackTint}
+              onPress={() => this.dropTable()}
             />
           </View>
         </View>
