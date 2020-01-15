@@ -14,14 +14,12 @@ import {
 
 import { db } from '../MoodRating/MoodRating.js';
 
-var selectSuccess = "false";
-var results = [];
-
 class MoodRatingGraph extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      moodHistory: []
+      dates: [""],
+      moods: [0]
     };
   }
   static navigationOptions = {
@@ -29,15 +27,25 @@ class MoodRatingGraph extends React.Component {
   };
 
   getMoodHistory() {
-    var temp = [];
+    var dates = [];
+    var moods = [];
     db.transaction(tx => {
       tx.executeSql("SELECT * FROM DailyMoods", [], (tx, res) => {
         for (let i = 0; i < res.rows.length; ++i) {
-          temp.push(res.rows.item(i));
+          dates.push(res.rows.item(i).date);
+          moods.push(res.rows.item(i).mood);
         }
-        this.setState({moodHistory: temp});
+        this.setState({dates, moods});
       });
     });
+  }
+
+  returnDates() {
+    return this.state.dates;
+  }
+
+  returnMoods() {
+    return this.state.moods;
   }
 
   componentDidMount = () => {
@@ -49,52 +57,39 @@ class MoodRatingGraph extends React.Component {
 
     return(
 
-        <View>
-          <Text>Mood History</Text>
-          <FlatList style={{height: "100%"}} data={this.state.moodHistory}
-            ItemSeparatorComponent={this.ListSeparator}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={{ padding: 10, marginTop: 10, elevation: 5, marginHorizontal: 10, backgroundColor: 'white' }} key={item.mood_id}>
-                <Text>Date: {item.date}</Text>
-                <Text>Mood: {item.mood}</Text>
-              </View>
-            )}
-          />
-        </View>
+      <View>
+        <Text>Mood History</Text>
+        <LineChart
+          data={{
+            labels: this.state.dates,
+            datasets: [
+              {
+                data: this.state.moods,
+              },
+            ],
+          }}
+          width={Dimensions.get('window').width} // from react-native
+          height={220}
+          chartConfig={{
+            backgroundColor: '#50B9FF',
+            backgroundGradientFrom: '#50B9FF',
+            backgroundGradientTo: '#B0E6FF',
+            decimalPlaces: 2,
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            style: {
+              borderRadius: 32,
+            },
+            propsForDots: {
+              r: '5',
+              strokeWidth: '1',
+              stroke: '#5698F5',
+            },
+          }}
+        />
+      </View>
     );
   }
 }
-
-//          <LineChart
-//            data={{
-//              labels: ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
-//              datasets: [
-//                {
-//                  data: { data };
-//                }
-//              ]
-//            }}
-//            width={Dimensions.get("window").width} // from react-native
-//            height={220}
-//
-//            chartConfig={{
-//              backgroundColor: "#50B9FF",
-//              backgroundGradientFrom: "#50B9FF",
-//              backgroundGradientTo: "#B0E6FF",
-//              decimalPlaces: 2,
-//              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-//              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-//              style: {
-//                borderRadius: 32
-//              },
-//              propsForDots: {
-//                r: "5",
-//                strokeWidth: "1",
-//                stroke: "#5698F5"
-//              }
-//            }}
-//
-//          />
 
 export default MoodRatingGraph;
