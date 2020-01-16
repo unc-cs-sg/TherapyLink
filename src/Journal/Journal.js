@@ -5,101 +5,99 @@ import {
   TextInput,
   Text,
   TouchableOpacity,
-  Alert
+  Alert,
+  FlatList,
+  PushNotificationIOS,
 } from 'react-native';
 import { diaryStyles } from '../styles/DiaryStyles.js';
 import SQLite from "react-native-sqlite-2";
 import moment from 'moment';
-import { bool } from 'prop-types';
+import Icon from '../../node_modules/react-native-ionicons';
 
 const db = SQLite.openDatabase("test.db", "1.0", "Test Database", 1);
 
 class Journal extends React.Component {
   constructor(props) {
     super(props);
+    // When we navigate to a stored entry, populate the journal entry page with
+    // the information from the database
     this.state = {
-      entryTitle: '',
-      userComment: '',
-      momentDate: moment(new Date()).format("MMMM DD"),
+      data: [],
     };
+  }
+
+  ListSeparator = () => {
+    return (
+      <View style={{ height: 0.2, width: '100%', backgroundColor: '#34c0eb', padding: 5 }} />
+    );
   }
 
   static navigationOptions = {
     title: 'Journal',
-  };
+  }
 
-  addEntry = () => {
-    console.log("Adding Entry...");
-    const { entryTitle } = this.state;
-    const { userComment } = this.state;
-    const { momentDate } = this.state;
-
-    db.transaction(function (txn) {
-      console.log(txn);
-      // To be removed later to actually maintain a persistent database later on
-      txn.executeSql("DROP TABLE IF EXISTS Users", []);
-      txn.executeSql("DROP TABLE IF EXISTS Entries", []);
-
-      txn.executeSql(
-        "CREATE TABLE IF NOT EXISTS Users(user_id INTEGER PRIMARY KEY NOT NULL, name VARCHAR(30))",
-        []
-      );
-      txn.executeSql(
-        "CREATE TABLE IF NOT EXISTS Entries(entry_id INTEGER PRIMARY KEY NOT NULL, title VARCHAR(40), date_added TEXT, user_comment TEXT)",
-        []
-      );
-
-      txn.executeSql("INSERT INTO Entries (title, date_added, user_comment) VALUES (?, ?, ?)", [entryTitle, momentDate, userComment]);
-
-      txn.executeSql("SELECT * FROM Entries", [], function (tx, res) {
+  updateEntryList = () => {
+    db.transaction(tx => {
+      tx.executeSql("SELECT * FROM Entries", [], (tx, res) => {
+        console.log("Query completed.");
+        var temp = [];
         for (let i = 0; i < res.rows.length; ++i) {
-          console.log("entry: ", res.rows.item(i));
+          temp.push(res.rows.item(i));
         }
+        console.log(temp);
+        this.setState({
+          data: temp,
+        });
       });
-    })
-
+    });
   }
 
-  hasNegativeEmotion = () => {
-    const { navigation } = this.props;
-    let data = navigation.getParam('emotions', 'default');
-    let hasNegative = false;
-    for (let i = 0; i < data.length; ++i) {
-      if (data[i] == "1") {
-        hasNegative = true;
-      }
-    }
-
-    if (hasNegative) {
-      return <Text>Will move to second prompt.</Text>;
-    } else {
-      console.log(this.props.navigation.getParam('emotions', 'default'));
-      console.log(this.state.hasNegative);
-      return <Text>Default Submit</Text>;
-    }
+  removeEntry = id => {
+    db.transaction(tx => {
+      tx.executeSql(
+        "DELETE FROM Entries WHERE entry_id = ?", [id]
+      );
+    });
   }
 
-  // TODO: Add input validation to make sure there are no null entries
+  // Workaround to make sure entry list refreshes when we go back from journal entry
+  refreshComponent = () => {
+    console.log("refreshComponent called");
+    this.updateEntryList();
+  }
+
+  componentDidMount = () => {
+    console.log("componentDidMount fired");
+    this.updateEntryList();
+  }
+
+  // Don't call setState() in render! This causes an infinite loop xD
   render() {
     const { navigate } = this.props.navigation;
     const { navigation } = this.props;
-    let negativeString = this.hasNegativeEmotion();
     return (
-      <View>
-        <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({ entryTitle: text })} value={this.state.entryTitle} />
-        <View style={diaryStyles.buttonContainer}>
-          <View style={diaryStyles.optionsButtons}>
-            <Button title="Feelings" onPress={() => navigate('JournalOptions')} />
-          </View>
-          <View style={diaryStyles.optionsButtons}>
-            <Button title="Submit" onPress={() => { this.addEntry(); navigate('MainScreen'); }} />
-          </View>
-        </View>
-        <Text style={{ paddingHorizontal: 10 }}>Thoughts</Text>
-        <TextInput style={diaryStyles.userComment} placeholder="Describe your thoughts and how you felt." multiline={true} numberOfLines={10} onChangeText={(text) => this.setState({ userComment: text })} value={this.state.userComment} />
-        <View>{negativeString}</View>
+      <View style={{ flex: 1, flexDirection: 'column', backgroundColor: '#34c0eb', paddingVertical: 10, paddingBottom: 100 }}>
+        <TouchableOpacity style={{ alignSelf: 'flex-end', alignSelf: 'center', position: 'absolute', bottom: 35, width: 50, height: 50, borderRadius: 50 / 2, backgroundColor: '#34ebd6', alignItems: 'center', justifyContent: 'center', zIndex: 1, }} onPress={() => navigate('JournalEntry', { JournalIndex: this })}>
+          <Icon name="add" color={'#FFF'} />
+        </TouchableOpacity>
+
+        <FlatList data={this.state.data}
+          ItemSeparatorComponent={this.ListSeparator}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View style={{ padding: 10, marginTop: 10, elevation: 5, marginHorizontal: 10, backgroundColor: 'white' }} key={item.entry_id}>
+              <Text>Title: {item.title}</Text>
+              <Text>Date Added: {item.date_added}</Text>
+              <Text>Comment: {item.user_comment}</Text>
+              <Text>Emotions: {item.emotions}</Text>
+              <Button title=">" onPress={() => navigate('JournalEntry', { JournalIndex: this, title: item.title, comment: item.user_comment, id: item.entry_id })} />
+              <Button title="x" onPress={() => { this.removeEntry(item.entry_id); this.refreshComponent(); }} />
+            </View>
+          )}
+        />
       </View>
-    );
+    )
+
   }
 }
 
