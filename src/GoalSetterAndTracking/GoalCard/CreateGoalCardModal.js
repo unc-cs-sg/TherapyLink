@@ -7,6 +7,7 @@ View,
 ScrollView,
 Text,
 TouchableHighlight,
+TouchableOpacity,
 StyleSheet,
 Dimensions,
 Alert,
@@ -73,8 +74,7 @@ class CreateGoalCardModal extends React.Component {
         const {
           action, year, month, day,
         } = await DatePickerAndroid.open({
-            date: new Date(),
-            minDate: new Date(),
+            date: (this.state.startDate == null) ? new Date() : new Date(this.state.startDate),
         });
         if (action !== DatePickerAndroid.dismissedAction) {
             let itemsReplacement = Object.assign({}, this.state.items);
@@ -97,8 +97,7 @@ class CreateGoalCardModal extends React.Component {
         const {
           action, year, month, day,
         } = await DatePickerAndroid.open({
-            date: new Date(),
-            minDate: new Date(),
+            date: (this.state.endDate == null) ? new Date() : new Date(this.state.endDate),
         });
         if (action !== DatePickerAndroid.dismissedAction) {
             let itemsReplacement = Object.assign({}, this.state.items);
@@ -129,30 +128,24 @@ class CreateGoalCardModal extends React.Component {
             this.setState({
                 items: itemsReplacement
             })
-            console.log(itemsReplacement);
-            console.log(this.state.items);
         } else {
             let {[key]:value, ...itemsTrimmed } = this.state.items;
             let itemsReplacement = Object.assign({}, itemsTrimmed, {[key]: replacement});
             this.setState({
                 items: itemsReplacement
             })
-            console.log(itemsReplacement)
-            console.log(this.state.items);
         }
     }
 
     render() {
         return(
-            <Modal
-              transparent={true}
-              animationType="slide"
-              transparent
-              onRequestClose={() => {
-                this.props.displayModal(!this.props.setModalVisible);
-              }}>
-              <View style = {styles.modalView}>
+              <View style={styles.viewContainer}>
               <ScrollView>
+                <View>
+                    <TouchableOpacity style={styles.closeButton} onPress={()=>{this.props.displayModal()}}>
+                        <Text style = {{color: "green"}}> Close [X] </Text>
+                    </TouchableOpacity>
+                </View>
                 <Text style={styles.description}>Self-care is any activity that we do deliberately in order to take care of our mental, emotional, or physical health. It can be as simple as taking a nap, going to a yoga class, or reading a good book. How are you going to engage in self-care this week?</Text>
                 <View style = {styles.dateButtonsContainer}>
                     <Button style = {styles.dateButton} title="Start date" onPress={() => this.setStartDate()}
@@ -160,52 +153,45 @@ class CreateGoalCardModal extends React.Component {
                     <Button style = {styles.dateButton} title="End date" onPress={() => this.setEndDate()}
                     />
                 </View>
-                <Text style={styles.heading}> My Self-Care Plan for {this.state.startDate.toDateString()} to {this.state.endDate.toDateString()} </Text>
+                <Text style={styles.heading}> My Self-Care Plan for {this.state.startDate == null ? "_________" : this.state.startDate.toDateString()} to {this.state.endDate == null ? "_________" : this.state.endDate.toDateString()} </Text>
                 {this.state.inputFields.map((value, index) => {
                     return value
                 })}
-                <Button title="Add Field" onPress={() => {
+                <Button title="Add" onPress={() => {
                         if (this.state.lastUsedKey < 10) {
                             this.addInputField(this.state.lastUsedKey + 1)
                         }
                     }
                 } />
-                <View style={styles.dateButtonsContainer}>
-                    <Button disabled = {Object.entries(this.state.items).length === 0} style={styles.dateButton} title="Save" onPress={() => {
-                            let ed = new Date(this.state.endDate);
-                            let sd = new Date(this.state.startDate);
-                            if (ed.setHours(0,0,0,0) < sd.setHours(0,0,0,0)) {
+                <View style={styles.saveButtonContainer}>
+                    <Button disabled = {Object.entries(this.state.items).length === 0} style={styles.saveButton} title="Save" onPress={() => {
+                            let ed = this.state.endDate;
+                            let sd = this.state.startDate;
+                            if (ed == null || sd == null) {
+                                ToastAndroid.show('You must pick both a start date and an end date.', ToastAndroid.SHORT);
+                            }
+                            else if (new Date(ed).setHours(0,0,0,0) < new Date(sd).setHours(0,0,0,0)) {
                                 ToastAndroid.show('You must pick an end date equal to or after your start date before saving.', ToastAndroid.SHORT);
                             } else {
                                 if (!this.props.edit) {
                                     this.props.addPlan(Object.values(this.state.items), this.state.startDate, this.state.endDate);
                                 } else {
-                                    this.props.editPlan(Object.values(this.state.items), this.state.startDate, this.state.endDate, this.props.index);
+                                    this.props.editPlan(Object.values(this.state.items), this.props.startDate, this.props.endDate, this.state.startDate, this.state.endDate, this.props.index);
                                 }
                                 this.props.displayModal();
                             }
                         }}
                     />
-                    <Button style={styles.dateButton} title="Close" onPress={() => {this.props.displayModal()}}/>
                 </View>
               </ScrollView>
               </View>
-            </Modal>
         );
     }
 }
 
 const styles = StyleSheet.create({
-  modalView: {
-      backgroundColor: 'white',
-      opacity: 1,
-      borderWidth: .5,
-      borderColor: 'gray',
-      width: Dimensions.get('window').width*0.9,
-      height: Dimensions.get('window').height*0.8,
-      alignSelf: 'center',
-      top: Dimensions.get('window').height*0.1,
-      alignItems: 'center',
+  viewContainer: {
+    padding: 10
   },
   textInput: {
     borderWidth: 1,
@@ -220,6 +206,13 @@ const styles = StyleSheet.create({
   },
   dateButton: {
     margin: 3
+  },
+  closeButton: {
+    alignSelf: 'flex-end',
+    flex: 1
+  },
+  saveButtonContainer: {
+    marginTop: 8
   }
 })
 

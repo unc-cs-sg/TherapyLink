@@ -42,14 +42,14 @@ class GoalHistory extends React.Component {
               newDate.setHours(0,0,0,0);
               if (newEndDate < newDate) {
                   for ( startDate in plans[endDate]) {
-                      plans[endDate][startDate].plans.forEach((plan, i) => {
+                      plans[endDate][startDate].plans.forEach((planObj, i) => {
+                          let plan = planObj.items;
                           let newPlan = {plan, startDate, endDate, index: i};
                           plansToRender.push(newPlan);
                       })
                   }
               }
           }
-          console.log(plansToRender);
           this.setState({
               plans: plansToRender
           })
@@ -60,6 +60,7 @@ class GoalHistory extends React.Component {
     const {navigate} = this.props.navigation;
     return (
         <View>
+        <ScrollView>
         <Text> Plan History </Text>
         {
             (this.state.plans == null || this.state.plans == undefined || this.state.plans.length == 0) ?
@@ -70,6 +71,7 @@ class GoalHistory extends React.Component {
             })
 
         }
+        </ScrollView>
         </View>
     );
   }

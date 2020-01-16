@@ -19,11 +19,11 @@ const GoalCard = ({plan, startDate, endDate, index, showEditModal, showEditButto
     return(
         <View style={styles.goalCard}>
             <View>
+                <Text> Started: {new Date(startDate).toDateString()} </Text>
+                <Text> Ending: {new Date(endDate).toDateString()} </Text>
                 {plan.map((item, i) => {
                     return (<Text> {i+1}. {item.information} </Text>);
                 })}
-                <Text> Started: {new Date(startDate).toDateString()} </Text>
-                <Text> Ending: {new Date(endDate).toDateString()} </Text>
             </View>
             { showEditButton ?
                 <Button
