@@ -4,6 +4,7 @@ import {
     View,
     Text,
     Alert,
+    ScrollView,
 } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 
@@ -120,6 +121,21 @@ class JournalOptions extends React.Component {
         title: 'How did you feel?',
     };
 
+    hasNegativeEmotion = () => {
+        const { selectedItemObjects } = this.state;
+        for (let i = 0; i < selectedItemObjects.length; ++i) {
+            if (selectedItemObjects[i].isNeg) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    onSelectedItemsChange = selectedItems => {
+        this.setState({ selectedItems });
+        console.log(selectedItems);
+    };
+
     onSelectedItemsSubmit = () => {
         const { selectedItems } = this.state;
 
@@ -130,10 +146,24 @@ class JournalOptions extends React.Component {
         });
     }
 
-    onSelectedItemsChange = selectedItems => {
-        this.setState({ selectedItems });
-        console.log(selectedItems);
-    };
+    handleNavigation = () => {
+        const { navigate } = this.props.navigation;
+        const { navigation } = this.props;
+        const { selectedItemObjects } = this.state;
+        if (this.hasNegativeEmotion()) {
+            navigate('NegativeEmotionPanel', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: selectedItemObjects });
+        } else {
+            navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: selectedItemObjects });
+        }
+    }
+
+    componentDidMount = () => {
+        const { navigation } = this.props;
+        let emotionData = navigation.getParam('emotionData', []);
+        this.setState({ selectedItems: emotionData });
+    }
+
+    // Have to test two cases: creating a new entry and updating an entry since not sure if update will change emotionState to trigger function
 
     // componentDidUpdate will not be called on initial render
     // This method is called whenever the state changes following
@@ -143,8 +173,9 @@ class JournalOptions extends React.Component {
         if (prevState.selectedItemObjects !== this.state.selectedItemObjects) {
             console.log("selectedItemObjects updated!");
             console.log(this.state.selectedItemObjects);
+            this.handleNavigation();
             // this.props.navigation.state.params.JournalEntry.refreshComponent(selectedItemObjects);
-            navigate('JournalEntry', { emotions: this.state.selectedItemObjects });
+            //navigate('JournalEntry', { emotions: this.state.selectedItemObjects });
         }
     }
 
@@ -153,7 +184,7 @@ class JournalOptions extends React.Component {
         const { selectedItems } = this.state;
 
         return (
-            <View style={{ flex: 1, paddingHorizontal: 20 }}>
+            <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
                 <MultiSelect
                     hideTags
                     items={items}
@@ -181,7 +212,7 @@ class JournalOptions extends React.Component {
                 <Button title="Save" onPress={() => {
                     this.onSelectedItemsSubmit();
                 }} />
-            </View>
+            </ScrollView>
         )
     }
 }

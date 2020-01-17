@@ -40,17 +40,17 @@ class JournalEntry extends React.Component {
     })
   }
 
-  hasNegativeEmotion = () => {
-    const { navigation } = this.props;
-    let data = navigation.getParam('emotions', 'default');
-    console.log("hasNegativeEmotion.data: " + data);
-    for (let i = 0; i < data.length; ++i) {
-      if (data[i].isNeg) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // hasNegativeEmotion = () => {
+  //   const { navigation } = this.props;
+  //   let data = navigation.getParam('emotions', 'default');
+  //   console.log("hasNegativeEmotion.data: " + data);
+  //   for (let i = 0; i < data.length; ++i) {
+  //     if (data[i].isNeg) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
   // If this is an existing entry we are reading from the main group
   // and not a new entry, then we update the input boxes with the
@@ -68,9 +68,12 @@ class JournalEntry extends React.Component {
     });
   }
 
+  // Is this necessary after we separate into new
+  // emotions panel?
   onSubmit = () => {
     const { navigation } = this.props;
-    let emotionData = navigation.getParam('emotions', null);
+    const { navigate } = this.props.navigation;
+    let emotionData = navigation.getParam('emotions', []);
 
     if (emotionData !== null) {
       for (let i = 0; i < emotionData.length; ++i) {
@@ -78,9 +81,8 @@ class JournalEntry extends React.Component {
           emotionState: [...prevState.emotionState, emotionData[i].name]
         }));
       }
-    } else {
-      alert("Please record how you felt first.")
     }
+    navigate('JournalOptions', { emotionData: emotionData, JournalEntry: this });
   }
 
   // componentDidMount will be called after all the DOM elements
@@ -90,18 +92,20 @@ class JournalEntry extends React.Component {
     this.readSelectedEntry();
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
-    const { navigate } = this.props.navigation;
-    if (prevState.emotionState !== this.state.emotionState) {
-      console.log("emotionState updated!");
-      if (this.hasNegativeEmotion()) {
-        console.log("Negative emotion.");
-        navigate('NegativeEmotionPanel', { JournalEntry: this });
-      } else {
-        navigate('JournalSummary', { JournalEntry: this });
-      }
-    }
-  }
+  // Going to have to move this logic to new
+  // feelings page
+  // componentDidUpdate = (prevProps, prevState) => {
+  //   const { navigate } = this.props.navigation;
+  //   if (prevState.emotionState !== this.state.emotionState) {
+  //     console.log("emotionState updated!");
+  //     if (this.hasNegativeEmotion()) {
+  //       console.log("Negative emotion.");
+  //       navigate('NegativeEmotionPanel', { JournalEntry: this });
+  //     } else {
+  //       navigate('JournalSummary', { JournalEntry: this });
+  //     }
+  //   }
+  // }
 
   // TODO: Add input validation to make sure there are no null entries
   render() {
@@ -113,26 +117,26 @@ class JournalEntry extends React.Component {
         <TextInput style={diaryStyles.title} placeholder="Title" onChangeText={(text) => this.setState({ entryTitle: text })} value={this.state.entryTitle} />
         <View style={diaryStyles.buttonContainer}>
           <View style={diaryStyles.optionsButtons}>
-            <Button title="Feelings" onPress={() => navigate('JournalOptions', { JournalEntry: this })} />
+            {/* <Button title="Feelings" onPress={() => navigate('JournalOptions', { JournalEntry: this })} /> */}
           </View>
 
           {/* Hack-ey way of updating the journal entry index when we
           return */}
-          <View style={diaryStyles.optionsButtons}>
-            {/* Will have to call addEntry in the JournalSummary panel later */}
-            <Button title="Submit" onPress={() => {
-              if (this.state.entryID !== 0) {
-                this.updateEntry(this.state.entryID);
-              } 
-
-              this.onSubmit();
-              navigation.state.params.JournalIndex.refreshComponent();
-            }} />
-
-          </View>
         </View>
         <Text style={{ paddingHorizontal: 10 }}>Thoughts</Text>
         <TextInput style={diaryStyles.userComment} placeholder="Describe your thoughts and how you felt." multiline={true} numberOfLines={10} onChangeText={(text) => this.setState({ userComment: text })} value={this.state.userComment} />
+        <View>
+          {/* Will have to call addEntry in the JournalSummary panel later */}
+          <Button title="Next" onPress={() => {
+            if (this.state.entryID !== 0) {
+              this.updateEntry(this.state.entryID);
+            }
+
+            this.onSubmit();
+            navigation.state.params.JournalIndex.refreshComponent();
+          }} />
+
+        </View>
       </View>
     );
   }

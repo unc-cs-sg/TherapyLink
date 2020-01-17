@@ -9,6 +9,10 @@ import { NavigationEvents } from 'react-navigation';
 
 const db = SQLite.openDatabase("test.db", "1.0", "Test Database", 1);
 
+// Idea may be to move all the emotion state from
+// summary into a previously empty state of the 
+// JournalEntry component
+
 class JournalSummary extends Component {
     constructor(props) {
         super(props);
@@ -62,11 +66,15 @@ class JournalSummary extends Component {
 
     createSummary = () => {
         let { data } = this.state;
+        console.log(data.emotions);
+        let emotionArr = data.emotions.map(emotionInfo => (
+            <Text>{emotionInfo.name}</Text>
+        ));
         return (
             <Text>
                 Title: {data.title}{"\n"}
                 Comment: {data.comment}{"\n"}
-                Emotions: {data.emotions}
+                Emotions: {emotionArr}
             </Text>
         )
     }
@@ -78,21 +86,22 @@ class JournalSummary extends Component {
             data: {
                 title: navigation.getParam('JournalEntry', null).state.entryTitle,
                 comment: navigation.getParam('JournalEntry', null).state.userComment,
-                emotions: navigation.getParam('JournalEntry', null).state.emotionState,
+                emotions: navigation.getParam('emotionData', []),
             }
         });
     }
 
     render() {
         const { navigate } = this.props.navigation;
-        const {JournalEntry} = this.props.navigation.state.params;
-        const {JournalIndex} = JournalEntry.props.navigation.state.params;
+        const { JournalEntry } = this.props.navigation.state.params;
+        const { JournalIndex } = JournalEntry.props.navigation.state.params;
         return (
             <View>
                 {this.createMessage()}
                 {this.createSummary()}
                 <Button title="Save" onPress={() => {
-                    this.addEntry(); JournalIndexnavigate('Journal')}} />
+                    this.addEntry(); navigate('Journal')
+                }} />
             </View>
         )
     }
