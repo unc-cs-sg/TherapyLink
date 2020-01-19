@@ -17,7 +17,7 @@ class JournalSummary extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isYes: false,
+            isPositive: false,
             data: {
                 title: '',
                 comment: '',
@@ -28,7 +28,7 @@ class JournalSummary extends Component {
 
     createMessage = () => {
         return (
-            this.state.isYes ?
+            this.state.isPositive ?
                 <Text>
                     Having a plan is the first step in improving or avoiding negative experiences. Good job on thinking through what you can do to make the situation better or avoid it from happening in the future.
             </Text> :
@@ -43,10 +43,15 @@ class JournalSummary extends Component {
     }
 
     addEntry = () => {
-        const entry = this.props.navigation.getParam('JournalEntry', null);
-        const { entryTitle, userComment, momentDate, emotionState } = entry.state;
-        console.log("JournalSummary emotionState: " + emotionState);
+        const { navigation } = this.props;
+        const entry = navigation.getParam('JournalEntry', null);
+        const { entryTitle, userComment, momentDate } = entry.state;
+        const emotionData = navigation.getParam('emotionData', []);
+        console.log("submitting emotionData: " + emotionData);
 
+        let emotionArr = emotionData.map((
+            emotionInfo => emotionInfo.name
+        ));
         db.transaction(function (txn) {
             // To be removed later to actually maintain a persistent database later on
             // txn.executeSql(
@@ -58,23 +63,35 @@ class JournalSummary extends Component {
             );
 
             txn.executeSql(
-                "INSERT INTO Entries(title, date_added, user_comment, emotions) VALUES (?, ?, ?, ?)", [entryTitle, momentDate, userComment, emotionState.toString()]
+                "INSERT INTO Entries(title, date_added, user_comment, emotions) VALUES (?, ?, ?, ?)", [entryTitle, momentDate, userComment, emotionArr.toString()]
             );
         });
 
+    }
+
+    updateEntry = (entry, id) => {
+        let { data} = this.state;
+        let emotionArr = data.emotions.map(
+            emotionInfo => emotionInfo.name
+        );
+        db.transaction(function (tx) {
+            tx.executeSql(
+                "UPDATE Entries SET title = ?, user_comment = ?, emotions = ? WHERE entry_id = ?", [entry.state.entryTitle, entry.state.userComment, emotionArr.toString(), id]
+            );
+        });
     }
 
     createSummary = () => {
         let { data } = this.state;
         console.log(data.emotions);
         let emotionArr = data.emotions.map(emotionInfo => (
-            <Text>{emotionInfo.name}</Text>
+            emotionInfo.name
         ));
         return (
             <Text>
                 Title: {data.title}{"\n"}
                 Comment: {data.comment}{"\n"}
-                Emotions: {emotionArr}
+                Emotions: {emotionArr.join(', ')}
             </Text>
         )
     }
@@ -82,7 +99,7 @@ class JournalSummary extends Component {
     componentDidMount = () => {
         const { navigation } = this.props;
         this.setState({
-            isYes: this.props.navigation.getParam('isYes', false),
+            isPositive: this.props.navigation.getParam('isPositive', false),
             data: {
                 title: navigation.getParam('JournalEntry', null).state.entryTitle,
                 comment: navigation.getParam('JournalEntry', null).state.userComment,
@@ -100,7 +117,12 @@ class JournalSummary extends Component {
                 {this.createMessage()}
                 {this.createSummary()}
                 <Button title="Save" onPress={() => {
-                    this.addEntry(); navigate('Journal')
+                    if (JournalEntry.state.entryID !== 0) {
+                        this.updateEntry(JournalEntry, JournalEntry.state.entryID);
+                    } else {
+                        this.addEntry();
+                    }
+                    JournalIndex.refreshComponent(); navigate('Journal')
                 }} />
             </View>
         )

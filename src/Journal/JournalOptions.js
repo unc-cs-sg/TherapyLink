@@ -95,21 +95,123 @@ const items = [
         isNeg: true,
     },
     {
-        id: '17',
+        id: '18',
         name: 'Scared',
         isNeg: true,
     },
     {
-        id: '18',
+        id: '19',
         name: 'Surprised',
         isNeg: false,
     },
     {
-        id: '19',
+        id: '20',
         name: 'Worthless',
         isNeg: true,
     },
 ];
+const itemsObjects = {
+    "Angry": {
+        id: '0',
+        name: 'Angry',
+        isNeg: true,
+    },
+    "Anxious": {
+        id: '1',
+        name: 'Anxious',
+        isNeg: true,
+    },
+    "Ashamed": {
+        id: '2',
+        name: 'Ashamed',
+        isNeg: true,
+    },
+    "Awkward": {
+        id: '3',
+        name: 'Awkward',
+        isNeg: true,
+    },
+    "Calm": {
+        id: '4',
+        name: 'Calm',
+        isNeg: false,
+    },
+    "Confused": {
+        id: '5',
+        name: 'Confused',
+        isNeg: true,
+    },
+    "Disgusted": {
+        id: '6',
+        name: 'Disgusted',
+        isNeg: true,
+    },
+    "Empty": {
+        id: '7',
+        name: 'Empty',
+        isNeg: true,
+    },
+    "Excited": {
+        id: '8',
+        name: 'Excited',
+        isNeg: false,
+    },
+    "Guilty": {
+        id: '9',
+        name: 'Guilty',
+        isNeg: true,
+    },
+    "Happy": {
+        id: '10',
+        name: 'Happy',
+        isNeg: false,
+    },
+    "Hopeful": {
+        id: '11',
+        name: 'Hopeful',
+        isNeg: false,
+    },
+    "Hopeless":{
+        id: '12',
+        name: 'Hopeless',
+        isNeg: true,
+    },
+    "Jealous": {
+        id: '13',
+        name: 'Jealous',
+        isNeg: true,
+    },
+    "Motivated": {
+        id: '14',
+        name: 'Motivated',
+        isNeg: false,
+    },
+    "Overwhelmed": {
+        id: '15',
+        name: 'Overwhelmed',
+        isNeg: true,
+    },
+    "Sad": {
+        id: '16',
+        name: 'Sad',
+        isNeg: true,
+    },
+    "Scared": {
+        id: '18',
+        name: 'Scared',
+        isNeg: true,
+    },
+    "Surprised": {
+        id: '19',
+        name: 'Surprised',
+        isNeg: false,
+    },
+    "Worthless":{
+        id: '20',
+        name: 'Worthless',
+        isNeg: true,
+    },
+};
 
 class JournalOptions extends React.Component {
     constructor(props) {
@@ -153,14 +255,22 @@ class JournalOptions extends React.Component {
         if (this.hasNegativeEmotion()) {
             navigate('NegativeEmotionPanel', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: selectedItemObjects });
         } else {
-            navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: selectedItemObjects });
+            navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: selectedItemObjects, isPositive: true });
         }
     }
 
     componentDidMount = () => {
         const { navigation } = this.props;
-        let emotionData = navigation.getParam('emotionData', []);
-        this.setState({ selectedItems: emotionData });
+        const emotionData = navigation.getParam('emotionData', []);
+        console.log(emotionData);
+
+        let emotionState = emotionData.map((
+            emotion => itemsObjects[emotion].id
+        ));
+
+        console.log("emotionState: " + emotionState);
+
+        this.setState({ selectedItems: emotionState });
     }
 
     // Have to test two cases: creating a new entry and updating an entry since not sure if update will change emotionState to trigger function
@@ -174,8 +284,6 @@ class JournalOptions extends React.Component {
             console.log("selectedItemObjects updated!");
             console.log(this.state.selectedItemObjects);
             this.handleNavigation();
-            // this.props.navigation.state.params.JournalEntry.refreshComponent(selectedItemObjects);
-            //navigate('JournalEntry', { emotions: this.state.selectedItemObjects });
         }
     }
 

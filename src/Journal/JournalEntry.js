@@ -22,7 +22,6 @@ class JournalEntry extends React.Component {
       userComment: '',
       momentDate: moment(new Date()).format("MMMM DD"),
       entryID: 0,
-      emotionState: [],
     };
   }
 
@@ -30,15 +29,15 @@ class JournalEntry extends React.Component {
     title: 'JournalEntry',
   };
 
-  updateEntry = id => {
-    const { entryTitle, userComment } = this.state;
+  // updateEntry = id => {
+  //   const { entryTitle, userComment } = this.state;
 
-    db.transaction(tx => {
-      tx.executeSql(
-        "UPDATE Entries SET title = ?, user_comment = ? WHERE entry_id = ?", [entryTitle, userComment, id]
-      );
-    })
-  }
+  //   db.transaction(tx => {
+  //     tx.executeSql(
+  //       "UPDATE Entries SET title = ?, user_comment = ? WHERE entry_id = ?", [entryTitle, userComment, id]
+  //     );
+  //   })
+  // }
 
   // hasNegativeEmotion = () => {
   //   const { navigation } = this.props;
@@ -73,15 +72,8 @@ class JournalEntry extends React.Component {
   onSubmit = () => {
     const { navigation } = this.props;
     const { navigate } = this.props.navigation;
-    let emotionData = navigation.getParam('emotions', []);
+    let emotionData = navigation.getParam('emotionData', []);
 
-    if (emotionData !== null) {
-      for (let i = 0; i < emotionData.length; ++i) {
-        this.setState(prevState => ({
-          emotionState: [...prevState.emotionState, emotionData[i].name]
-        }));
-      }
-    }
     navigate('JournalOptions', { emotionData: emotionData, JournalEntry: this });
   }
 
@@ -92,22 +84,6 @@ class JournalEntry extends React.Component {
     this.readSelectedEntry();
   }
 
-  // Going to have to move this logic to new
-  // feelings page
-  // componentDidUpdate = (prevProps, prevState) => {
-  //   const { navigate } = this.props.navigation;
-  //   if (prevState.emotionState !== this.state.emotionState) {
-  //     console.log("emotionState updated!");
-  //     if (this.hasNegativeEmotion()) {
-  //       console.log("Negative emotion.");
-  //       navigate('NegativeEmotionPanel', { JournalEntry: this });
-  //     } else {
-  //       navigate('JournalSummary', { JournalEntry: this });
-  //     }
-  //   }
-  // }
-
-  // TODO: Add input validation to make sure there are no null entries
   render() {
     const { navigate } = this.props.navigation;
     const { navigation } = this.props;
@@ -128,12 +104,7 @@ class JournalEntry extends React.Component {
         <View>
           {/* Will have to call addEntry in the JournalSummary panel later */}
           <Button title="Next" onPress={() => {
-            if (this.state.entryID !== 0) {
-              this.updateEntry(this.state.entryID);
-            }
-
             this.onSubmit();
-            navigation.state.params.JournalIndex.refreshComponent();
           }} />
 
         </View>

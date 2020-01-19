@@ -34,11 +34,11 @@ class NegativeEmotionPanel extends Component {
                         <Text>Yes</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{ height: 20, backgroundColor: '#07fc03', marginHorizontal: 20, padding: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null) })}>
+                    <TouchableOpacity style={{ height: 20, backgroundColor: '#07fc03', marginHorizontal: 20, padding: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: navigation.getParam('emotionData', []) })}>
                         <Text>No</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{ height: 20, backgroundColor: '#07fc03', marginHorizontal: 20, padding: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null) })}>
+                    <TouchableOpacity style={{ height: 20, backgroundColor: '#07fc03', marginHorizontal: 20, padding: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: navigation.getParam('emotionData', [])})}>
                         <Text>Don't know</Text>
                     </TouchableOpacity>
                 </View>
