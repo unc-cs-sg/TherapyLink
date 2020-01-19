@@ -1,11 +1,10 @@
 import React, {Fragment} from 'react';
-import {
-  Button,
-} from 'react-native';
+import {Button} from 'react-native';
 
 class Education extends React.Component {
   static navigationOptions = {
-    title: 'Education',
+    drawerLabel: 'Information',
+    title: 'Information',
   };
   render() {
     const {navigate} = this.props.navigation;
