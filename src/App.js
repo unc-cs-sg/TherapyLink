@@ -23,7 +23,8 @@ import NegativeEmotionPanel from './Journal/NegativeEmotionPanel';
 import SituationalScreen from './Journal/SituationalScreen';
 import JournalSummary from './Journal/JournalSummary';
 import Education from './Education.js';
-import Graphs from './Graphs.js';
+import Graphs from './Graphs/Graphs.js';
+import Admin from './Admin.js';
 import MoodRating from './MoodRating/MoodRating.js';
 import MoodRatingGraph from './Graphs/MoodRatingGraph.js';
 import Resources from './Resources/Resources.js';
@@ -83,9 +84,9 @@ const MainNavigator = createDrawerNavigator(
     Journal: {screen: Journal},
     JournalEntry: {screen: JournalEntry},
     JournalOptions: {screen: JournalOptions},
+    JournalSummary: {screen: JournalSummary},
     NegativeEmotionPanel: {screen: NegativeEmotionPanel},
     SituationalScreen: {screen: SituationalScreen},
-    JournalSummary: {screen: JournalSummary},
     Education: {screen: Education},
     Graphs: {screen: Graphs},
     Resources: {screen: ResourcesStack},
@@ -93,6 +94,7 @@ const MainNavigator = createDrawerNavigator(
     MoodRatingGraph: {screen: MoodRatingGraph},
     Goals: {screen: GoalSetter},
     GoalHistory: {screen: GoalHistory},
+    Admin: {screen: Admin},
   },
   {initialRouteName: 'MainScreen'},
 );

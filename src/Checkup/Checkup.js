@@ -1,8 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text, Button} from 'react-native';
 import QuestionList from './QuestionList.js';
-import SQLite from 'react-native-sqlite-2';
-import moment from 'moment';
+import {db, today, createCheckup, insertCheckup} from '../Database.js';
 
 let options = [
   'Not at all',
@@ -58,7 +57,6 @@ function depressionRange(v) {
     return 'severe';
   }
 }
-const db = SQLite.openDatabase('test.db', '1.0', '', 1);
 
 const styles = StyleSheet.create({
   row: {
@@ -91,19 +89,10 @@ export default class Checkup extends React.Component {
 
   handleFinish = total => {
     this.setState({screen: 'Finished', result: total});
-    // save to database here
 
-    db.transaction(txn => {
-      // id, date, type, score
-      txn.executeSql(
-        'CREATE TABLE IF NOT EXISTS Checkups(id INTEGER PRIMARY KEY NOT NULL, date VARCHAR(30), type VARCHAR(10), score INTEGER)',
-        [],
-      );
-
-      txn.executeSql(
-        'insert into Checkups (date, type, score) values (?, ?, ?)',
-        [moment().format('YYYY-MM-DD'), this.state.checkup, total],
-      );
+    db.transaction(t => {
+      createCheckup(t);
+      insertCheckup(t, today(), this.state.checkup, total);
     });
   };
 

@@ -1,62 +1,35 @@
 import React, {Fragment} from 'react';
 
-import {
-  Button,
-  Dimensions,
-  View,
-  Text,
-  FlatList
-} from 'react-native';
+import {Button, Dimensions, View, Text, FlatList} from 'react-native';
 
-import {
-  LineChart
-} from 'react-native-chart-kit';
+import {LineChart} from 'react-native-chart-kit';
 
-import { db } from '../MoodRating/MoodRating.js';
+import {db, selectAllDailyMoods} from '../Database.js';
 
 class MoodRatingGraph extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dates: [""],
-      moods: [0]
+      dates: [''],
+      moods: [0],
     };
   }
   static navigationOptions = {
     title: 'MoodRatingGraph',
   };
 
-  getMoodHistory() {
-    var dates = [];
-    var moods = [];
-    db.transaction(tx => {
-      tx.executeSql("SELECT * FROM DailyMoods", [], (tx, res) => {
-        for (let i = 0; i < res.rows.length; ++i) {
-          dates.push(res.rows.item(i).date);
-          moods.push(res.rows.item(i).mood);
+  componentDidMount = () => {
+    db.transaction(t => {
+      selectAllDailyMoods(t, results => {
+        if (results.moods.length > 0) {
+          this.setState({...results, show: true});
         }
-        this.setState({dates, moods});
       });
     });
-  }
-
-  returnDates() {
-    return this.state.dates;
-  }
-
-  returnMoods() {
-    return this.state.moods;
-  }
-
-  componentDidMount = () => {
-    this.getMoodHistory();
-  }
+  };
 
   render() {
-    const { navigate } = this.props.navigation;
-
-    return(
-
+    return (
       <View>
         <Text>Mood History</Text>
         <LineChart
