@@ -30,7 +30,7 @@ class NegativeEmotionPanel extends Component {
                     Is there anything you can do to make the situation better, or avoid it from happening in the future?
                 </Text>
                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
-                    <TouchableOpacity style={{ height: 20, backgroundColor: '#07fc03', marginHorizontal: 20, padding: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => navigate('SituationalScreen')}>
+                    <TouchableOpacity style={{ height: 20, backgroundColor: '#07fc03', marginHorizontal: 20, padding: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => navigate('SituationalScreen', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: navigation.getParam('emotionData', []) })}>
                         <Text>Yes</Text>
                     </TouchableOpacity>
 
@@ -38,7 +38,7 @@ class NegativeEmotionPanel extends Component {
                         <Text>No</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{ height: 20, backgroundColor: '#07fc03', marginHorizontal: 20, padding: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: navigation.getParam('emotionData', [])})}>
+                    <TouchableOpacity style={{ height: 20, backgroundColor: '#07fc03', marginHorizontal: 20, padding: 20, alignItems: 'center', justifyContent: 'center' }} onPress={() => navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: navigation.getParam('emotionData', []) })}>
                         <Text>Don't know</Text>
                     </TouchableOpacity>
                 </View>

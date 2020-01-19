@@ -70,7 +70,7 @@ class JournalSummary extends Component {
     }
 
     updateEntry = (entry, id) => {
-        let { data} = this.state;
+        let { data } = this.state;
         let emotionArr = data.emotions.map(
             emotionInfo => emotionInfo.name
         );
@@ -109,8 +109,9 @@ class JournalSummary extends Component {
     }
 
     render() {
+        const { navigation } = this.props;
         const { navigate } = this.props.navigation;
-        const { JournalEntry } = this.props.navigation.state.params;
+        const JournalEntry = navigation.getParam('JournalEntry', null);
         const { JournalIndex } = JournalEntry.props.navigation.state.params;
         return (
             <View>
