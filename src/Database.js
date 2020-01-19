@@ -1,4 +1,5 @@
 import SQLite from 'react-native-sqlite-2';
+import {AsyncStorage} from 'react-native';
 import moment from 'moment';
 
 export const db = SQLite.openDatabase('test.db', '1.0', 'Test Database', 1);
@@ -29,6 +30,7 @@ export function selectAllCheckup(t, cb) {
       labels.push(it.date);
       data.push(it.score);
     }
+    console.log(labels, data);
     cb({labels, data});
   });
 }
@@ -84,6 +86,10 @@ export function dropDailyMoods(t) {
   t.executeSql('DROP TABLE IF EXISTS DailyMoods');
 }
 
+export function dropEntries(t) {
+  t.executeSql('DROP TABLE IF EXISTS Entries');
+}
+
 export function selectAllEntries(t, cb) {
   t.executeSql('SELECT * FROM Entries', [], (tx, res) => {
     var temp = [];
@@ -117,4 +123,30 @@ export function updateEntries(t, id, title, comment) {
     'UPDATE Entries SET title = ?, user_comment = ? WHERE entry_id = ?',
     [title, comment, id],
   );
+}
+
+export function dropAll(t) {
+  AsyncStorage.clear();
+  dropCheckup(t);
+  dropDailyMoods(t);
+  dropEntries(t);
+  createCheckup(t);
+  createDailyMoods(t);
+  createEntries(t);
+}
+
+export function scenarioOne(t) {
+  dropAll(t);
+  insertCheckup(t, '2019-11-09', 'Anxiety', 7);
+  insertCheckup(t, '2019-12-01', 'Anxiety', 10);
+  insertCheckup(t, '2019-11-09', 'Depression', 8);
+  insertCheckup(t, '2019-12-01', 'Depression', 11);
+}
+
+export function scenarioTwo(t) {
+  dropAll(t);
+  insertCheckup(t, '2019-11-15', 'Anxiety', 6);
+  insertCheckup(t, '2019-12-02', 'Anxiety', 13);
+  insertCheckup(t, '2019-11-15', 'Depression', 5);
+  insertCheckup(t, '2019-12-02', 'Depression', 14);
 }

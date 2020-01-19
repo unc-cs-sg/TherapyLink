@@ -77,23 +77,44 @@ const ResourcesStack = createDrawerNavigator(
   {contentComponent: CustomDrawerContentComponent},
 );
 
-const MainNavigator = createDrawerNavigator(
+const JournalStack = createDrawerNavigator(
   {
-    MainScreen: {screen: MainScreen},
-    Checkup: {screen: Checkup},
     Journal: {screen: Journal},
     JournalEntry: {screen: JournalEntry},
     JournalOptions: {screen: JournalOptions},
     JournalSummary: {screen: JournalSummary},
     NegativeEmotionPanel: {screen: NegativeEmotionPanel},
     SituationalScreen: {screen: SituationalScreen},
-    Education: {screen: Education},
+  },
+  {contentComponent: CustomDrawerContentComponent},
+);
+
+const GraphsStack = createDrawerNavigator(
+  {
     Graphs: {screen: Graphs},
-    Resources: {screen: ResourcesStack},
-    MoodRating: {screen: MoodRating},
     MoodRatingGraph: {screen: MoodRatingGraph},
+  },
+  {contentComponent: CustomDrawerContentComponent},
+);
+
+const GoalsStack = createDrawerNavigator(
+  {
     Goals: {screen: GoalSetter},
     GoalHistory: {screen: GoalHistory},
+  },
+  {contentComponent: CustomDrawerContentComponent},
+);
+
+const MainNavigator = createDrawerNavigator(
+  {
+    MainScreen: {screen: MainScreen},
+    Journal: {screen: JournalStack},
+    Checkup: {screen: Checkup},
+    Education: {screen: Education},
+    Graphs: {screen: GraphsStack},
+    Resources: {screen: ResourcesStack},
+    MoodRating: {screen: MoodRating},
+    Goals: {screen: GoalsStack},
     Admin: {screen: Admin},
   },
   {initialRouteName: 'MainScreen'},

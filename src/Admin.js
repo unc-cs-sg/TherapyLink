@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Button} from 'react-native';
-import {db, selectAllCheckup} from './Database.js';
+import {db, scenarioOne, scenarioTwo, selectAllCheckup} from './Database.js';
 
 class Admin extends React.Component {
   static navigationOptions = {
@@ -13,12 +13,23 @@ class Admin extends React.Component {
       <View>
         <Button title="Go home" onPress={() => navigate('MainScreen')} />
         <Button
-          title="Test Checkup Select"
+          title="Scenario 1"
           onPress={() => {
-            db.transaction(t => selectAllCheckup(t));
+            db.transaction(t => scenarioOne(t));
           }}
         />
-        <Button title="Go home" onPress={() => navigate('MainScreen')} />
+        <Button
+          title="Scenario 2"
+          onPress={() => {
+            db.transaction(t => scenarioTwo(t));
+          }}
+        />
+        <Button
+          title="Select All Checkup"
+          onPress={() => {
+            db.transaction(t => selectAllCheckup(t, res => ({})));
+          }}
+        />
       </View>
     );
   }
