@@ -22,6 +22,7 @@ class JournalSummary extends Component {
                 title: '',
                 comment: '',
                 emotions: [],
+                userThought: '',
             }
         };
     }
@@ -91,7 +92,8 @@ class JournalSummary extends Component {
             <Text>
                 Title: {data.title}{"\n"}
                 Comment: {data.comment}{"\n"}
-                Emotions: {emotionArr.join(', ')}
+                Emotions: {emotionArr.join(', ')}{"\n"}
+                How will you address the current situation? {data.userThought}
             </Text>
         )
     }
@@ -104,6 +106,7 @@ class JournalSummary extends Component {
                 title: navigation.getParam('JournalEntry', null).state.entryTitle,
                 comment: navigation.getParam('JournalEntry', null).state.userComment,
                 emotions: navigation.getParam('emotionData', []),
+                userThought: navigation.getParam('userThought', ''),
             }
         });
     }
