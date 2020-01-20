@@ -6,8 +6,7 @@ import {
 } from 'react-native';
 import SQLite from "react-native-sqlite-2";
 import { NavigationEvents } from 'react-navigation';
-
-const db = SQLite.openDatabase("test.db", "1.0", "Test Database", 1);
+import { db } from '../Database.js';
 
 // Idea may be to move all the emotion state from
 // summary into a previously empty state of the 
@@ -98,17 +97,26 @@ class JournalSummary extends Component {
         )
     }
 
+    componentWillUnmount = () => {
+        this.willFocusSubscription.remove();
+    }
+
     componentDidMount = () => {
-        const { navigation } = this.props;
-        this.setState({
-            isPositive: this.props.navigation.getParam('isPositive', false),
-            data: {
-                title: navigation.getParam('JournalEntry', null).state.entryTitle,
-                comment: navigation.getParam('JournalEntry', null).state.userComment,
-                emotions: navigation.getParam('emotionData', []),
-                userThought: navigation.getParam('userThought', ''),
+        this.willFocusSubscription = this.props.navigation.addListener(
+            'willFocus',
+            payload => {
+                const { navigation } = this.props;
+                this.setState({
+                    isPositive: this.props.navigation.getParam('isPositive', false),
+                    data: {
+                        title: navigation.getParam('JournalEntry', null).state.entryTitle,
+                        comment: navigation.getParam('JournalEntry', null).state.userComment,
+                        emotions: navigation.getParam('emotionData', []),
+                        userThought: navigation.getParam('userThought', ''),
+                    }
+                });
             }
-        });
+        );
     }
 
     render() {
@@ -122,11 +130,12 @@ class JournalSummary extends Component {
                 {this.createSummary()}
                 <Button title="Save" onPress={() => {
                     if (JournalEntry.state.entryID !== 0) {
+                        console.log("Updating ENTRY");
                         this.updateEntry(JournalEntry, JournalEntry.state.entryID);
                     } else {
                         this.addEntry();
                     }
-                    JournalIndex.refreshComponent(); navigate('Journal')
+                    JournalIndex.refreshComponent(); navigate('Journal');
                 }} />
             </View>
         )

@@ -129,7 +129,7 @@ export function selectAllEntries(t, cb) {
     for (let i = 0; i < res.rows.length; ++i) {
       temp.push(res.rows.item(i));
     }
-    cb({temp});
+    cb(temp);
   });
 }
 
@@ -151,10 +151,10 @@ export function insertEntries(t, title, date, userComment, emotions) {
   );
 }
 
-export function updateEntries(t, id, title, comment) {
+export function updateEntries(t, id, title, comment, emotions) {
   t.executeSql(
-    'UPDATE Entries SET title = ?, user_comment = ? WHERE entry_id = ?',
-    [title, comment, id],
+    'UPDATE Entries SET title = ?, user_comment = ?, emotions = ? WHERE entry_id = ?',
+    [title, comment, emotions, id],
   );
 }
 

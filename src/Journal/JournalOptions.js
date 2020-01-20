@@ -171,7 +171,7 @@ const itemsObjects = {
         name: 'Hopeful',
         isNeg: false,
     },
-    "Hopeless":{
+    "Hopeless": {
         id: '12',
         name: 'Hopeless',
         isNeg: true,
@@ -206,7 +206,7 @@ const itemsObjects = {
         name: 'Surprised',
         isNeg: false,
     },
-    "Worthless":{
+    "Worthless": {
         id: '20',
         name: 'Worthless',
         isNeg: true,
@@ -240,6 +240,8 @@ class JournalOptions extends React.Component {
 
     onSelectedItemsSubmit = () => {
         const { selectedItems } = this.state;
+        
+        this.setState({selectedItemObjects: []});
 
         selectedItems.forEach(val => {
             this.setState(prevState => ({
@@ -259,18 +261,28 @@ class JournalOptions extends React.Component {
         }
     }
 
+    componentWillUnmount = () => {
+        this.willFocusSubscription.remove();
+    }
+
     componentDidMount = () => {
-        const { navigation } = this.props;
-        const emotionData = navigation.getParam('emotionData', []);
-        console.log(emotionData);
+        this.willFocusSubscription = this.props.navigation.addListener(
+            'willFocus',
+            payload => {
+                this.setState(this.baseState);
+                const { navigation } = this.props;
+                const emotionData = navigation.getParam('emotionData', []);
+                console.log(emotionData);
 
-        let emotionState = emotionData.map((
-            emotion => itemsObjects[emotion].id
-        ));
+                let emotionState = emotionData.map((
+                    emotion => itemsObjects[emotion].id
+                ));
 
-        console.log("emotionState: " + emotionState);
+                console.log("emotionState: " + emotionState);
 
-        this.setState({ selectedItems: emotionState });
+                this.setState({ selectedItems: emotionState });
+            }
+        );
     }
 
     // Have to test two cases: creating a new entry and updating an entry since not sure if update will change emotionState to trigger function
