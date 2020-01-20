@@ -21,6 +21,40 @@ export function insertCheckup(t, date, checkup, score) {
   ]);
 }
 
+export function selectAllDepressionCheckup(t, cb) {
+  t.executeSql(
+    "SELECT * FROM Checkups where type = 'Depression'",
+    [],
+    (tx, res) => {
+      var data = [];
+      var labels = [];
+      for (let i = 0; i < res.rows.length; ++i) {
+        let it = res.rows.item(i);
+        labels.push(it.date);
+        data.push(it.score);
+      }
+      cb({labels, data});
+    },
+  );
+}
+
+export function selectAllAnxietyCheckup(t, cb) {
+  t.executeSql(
+    "SELECT * FROM Checkups where type = 'Anxiety'",
+    [],
+    (tx, res) => {
+      var data = [];
+      var labels = [];
+      for (let i = 0; i < res.rows.length; ++i) {
+        let it = res.rows.item(i);
+        labels.push(it.date);
+        data.push(it.score);
+      }
+      cb({labels, data});
+    },
+  );
+}
+
 export function selectAllCheckup(t, cb) {
   t.executeSql('SELECT * FROM Checkups', [], (tx, res) => {
     var data = [];
@@ -30,7 +64,6 @@ export function selectAllCheckup(t, cb) {
       labels.push(it.date);
       data.push(it.score);
     }
-    console.log(labels, data);
     cb({labels, data});
   });
 }
@@ -59,13 +92,13 @@ export function updateDailyMoods(t, date, mood) {
 
 export function selectAllDailyMoods(t, cb) {
   t.executeSql('SELECT * FROM DailyMoods', [], (tx, res) => {
-    var dates = [];
-    var moods = [];
+    var labels = [];
+    var data = [];
     for (let i = 0; i < res.rows.length; ++i) {
-      dates.push(res.rows.item(i).date);
-      moods.push(res.rows.item(i).mood);
+      labels.push(res.rows.item(i).date);
+      data.push(res.rows.item(i).mood);
     }
-    cb({dates, moods});
+    cb({labels, data});
   });
 }
 

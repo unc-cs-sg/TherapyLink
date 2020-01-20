@@ -22,7 +22,7 @@ class MainScreen extends React.Component {
           source={require('./TherapyLink_Logo.png')}
         />
         <Button title="Journal" onPress={() => navigate('Journal')} />
-        <Button title="Information" onPress={() => navigate('Education')} />
+        <Button title="Information" onPress={() => navigate('Information')} />
         <Button title="Graphs" onPress={() => navigate('Graphs')} />
         <Button title="Mood Rating" onPress={() => navigate('MoodRating')} />
         <Button title="Resources" onPress={() => navigate('Resources')} />

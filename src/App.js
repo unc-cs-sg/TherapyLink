@@ -22,11 +22,15 @@ import JournalOptions from './Journal/JournalOptions.js';
 import NegativeEmotionPanel from './Journal/NegativeEmotionPanel';
 import SituationalScreen from './Journal/SituationalScreen';
 import JournalSummary from './Journal/JournalSummary';
-import Education from './Education.js';
+import Information from './Information/Information.js';
+import Anxiety from './Information/Anxiety.js';
+import Depression from './Information/Depression.js';
 import Graphs from './Graphs/Graphs.js';
 import Admin from './Admin.js';
 import MoodRating from './MoodRating/MoodRating.js';
 import MoodRatingGraph from './Graphs/MoodRatingGraph.js';
+import AnxietyCheckupGraph from './Graphs/AnxietyCheckupGraph';
+import DepressionCheckupGraph from './Graphs/DepressionCheckupGraph';
 import Resources from './Resources/Resources.js';
 import MentalHealthInfo from './Resources/MentalHealthInfo.js';
 import FindATherapist from './Resources/FindATherapist.js';
@@ -93,6 +97,8 @@ const GraphsStack = createDrawerNavigator(
   {
     Graphs: {screen: Graphs},
     MoodRatingGraph: {screen: MoodRatingGraph},
+    AnxietyCheckupGraph: {screen: AnxietyCheckupGraph},
+    DepressionCheckupGraph: {screen: DepressionCheckupGraph},
   },
   {contentComponent: CustomDrawerContentComponent},
 );
@@ -105,12 +111,21 @@ const GoalsStack = createDrawerNavigator(
   {contentComponent: CustomDrawerContentComponent},
 );
 
+const InformationStack = createDrawerNavigator(
+  {
+    Information: {screen: Information},
+    Anxiety: {screen: Anxiety},
+    Depression: {screen: Depression},
+  },
+  {contentComponent: CustomDrawerContentComponent},
+);
+
 const MainNavigator = createDrawerNavigator(
   {
     MainScreen: {screen: MainScreen},
     Journal: {screen: JournalStack},
     Checkup: {screen: Checkup},
-    Education: {screen: Education},
+    Information: {screen: InformationStack},
     Graphs: {screen: GraphsStack},
     Resources: {screen: ResourcesStack},
     MoodRating: {screen: MoodRating},

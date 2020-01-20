@@ -2,12 +2,12 @@ import React from 'react';
 
 import {Button, View, Text} from 'react-native';
 
-import {selectAllDailyMoods} from '../Database.js';
+import {selectAllAnxietyCheckup} from '../Database.js';
 import GenerateGraphs from './GenerateGraphs.js';
 
-class MoodRatingGraph extends React.Component {
+class AnxietyCheckupGraph extends React.Component {
   static navigationOptions = {
-    title: 'Mood History',
+    title: 'Anxiety Checkups',
   };
 
   render = () => {
@@ -15,11 +15,11 @@ class MoodRatingGraph extends React.Component {
     return (
       <View>
         <Button title="Go home" onPress={() => navigate('MainScreen')} />
-        <Text>Mood History</Text>
-        <GenerateGraphs cb={selectAllDailyMoods} />
+        <Text>AnxietyCheckups</Text>
+        <GenerateGraphs cb={selectAllAnxietyCheckup} />
       </View>
     );
   };
 }
 
-export default MoodRatingGraph;
+export default AnxietyCheckupGraph;
