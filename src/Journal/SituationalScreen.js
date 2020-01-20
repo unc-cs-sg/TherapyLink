@@ -20,6 +20,7 @@ class SituationalScreen extends Component {
     }
 
     render() {
+        const { navigation } = this.props;
         const { navigate } = this.props.navigation;
         return (
             <View style={{ alignItems: 'center', }}>
@@ -27,7 +28,7 @@ class SituationalScreen extends Component {
                     What do you think can be done to make the situation better?
                 </Text>
                 <TextInput style={{ textAlignVertical: 'top', width: '80%' }} placeholder="Write out your thoughts..." multiline={true} numberOfLines={10} onChangeText={text => this.setState({ text })} value={this.state.text} />
-                <TouchableOpacity onPress={() => navigate('JournalSummary', { isYes: true })}>
+                <TouchableOpacity onPress={() => { navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null), isPositive: true, emotionData: navigation.getParam('emotionData', []), userThought: this.state.text }) }}>
                     <Icon name="arrow-forward" />
                 </TouchableOpacity>
             </View>
