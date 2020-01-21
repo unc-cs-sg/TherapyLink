@@ -28,10 +28,6 @@ class MainScreen extends React.Component {
         <Button title="Resources" onPress={() => navigate('Resources')} />
         <Button title="Checkup" onPress={() => navigate('Checkup')} />
         <Button title="Self-Care Plan" onPress={() => navigate('Goals')} />
-        <Button
-          title="Open Drawer"
-          onPress={() => this.props.navigation.openDrawer()}
-        />
       </View>
     );
   }
