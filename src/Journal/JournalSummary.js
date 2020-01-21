@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import SQLite from "react-native-sqlite-2";
 import { NavigationEvents } from 'react-navigation';
-import { db } from '../Database.js';
+import { db, insertEntries, updateEntries } from '../Database.js';
 
 // Idea may be to move all the emotion state from
 // summary into a previously empty state of the 
@@ -52,32 +52,19 @@ class JournalSummary extends Component {
         let emotionArr = emotionData.map((
             emotionInfo => emotionInfo.name
         ));
-        db.transaction(function (txn) {
-            // To be removed later to actually maintain a persistent database later on
-            // txn.executeSql(
-            //   "DROP TABLE Entries"
-            // );
-            txn.executeSql(
-                "CREATE TABLE IF NOT EXISTS Entries(entry_id INTEGER PRIMARY KEY NOT NULL, title VARCHAR(40), date_added TEXT, user_comment TEXT, emotions TEXT)",
-                []
-            );
-
-            txn.executeSql(
-                "INSERT INTO Entries(title, date_added, user_comment, emotions) VALUES (?, ?, ?, ?)", [entryTitle, momentDate, userComment, emotionArr.toString()]
-            );
+        db.transaction(tx => {
+           insertEntries(tx, entryTitle, momentDate, userComment, emotionArr);
         });
 
     }
 
-    updateEntry = (entry, id) => {
+    updateEntry = id => {
         let { data } = this.state;
         let emotionArr = data.emotions.map(
             emotionInfo => emotionInfo.name
         );
-        db.transaction(function (tx) {
-            tx.executeSql(
-                "UPDATE Entries SET title = ?, user_comment = ?, emotions = ? WHERE entry_id = ?", [entry.state.entryTitle, entry.state.userComment, emotionArr.toString(), id]
-            );
+        db.transaction(tx => {
+            updateEntries(tx, id, data.title, data.comment, emotionArr);
         });
     }
 
@@ -131,7 +118,7 @@ class JournalSummary extends Component {
                 <Button title="Save" onPress={() => {
                     if (JournalEntry.state.entryID !== 0) {
                         console.log("Updating ENTRY");
-                        this.updateEntry(JournalEntry, JournalEntry.state.entryID);
+                        this.updateEntry(JournalEntry.state.entryID);
                     } else {
                         this.addEntry();
                     }

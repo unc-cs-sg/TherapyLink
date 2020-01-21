@@ -107,7 +107,7 @@ class Journal extends React.Component {
               <Text>Title: {item.title}</Text>
               <Text>Date Added: {item.date_added}</Text>
               <Text>Comment: {item.user_comment}</Text>
-              <Text>Emotions: {item.emotions}</Text>
+              <Text>Emotions: {item.emotions.split(',').join(', ')}</Text>
               <Button
                 title=">"
                 onPress={() =>

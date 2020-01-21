@@ -154,7 +154,7 @@ export function insertEntries(t, title, date, userComment, emotions) {
 export function updateEntries(t, id, title, comment, emotions) {
   t.executeSql(
     'UPDATE Entries SET title = ?, user_comment = ?, emotions = ? WHERE entry_id = ?',
-    [title, comment, emotions, id],
+    [title, comment, emotions.toString(), id],
   );
 }
 
