@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 
 import {colors, moodRatingStyles} from '../styles/MoodRatingStyles.js';
+import MenuButton from '../Components/MenuButton.js';
 
 const months = [
   'January',
@@ -84,7 +85,7 @@ class MoodRating extends React.Component {
 
     return (
       <View>
-        <Button title="Go Home" onPress={() => navigate('MainScreen')} />
+        <MenuButton />
         <View style={moodRatingStyles.container}>
           <Text>{greeting}</Text>
           <Text>{feeling}</Text>

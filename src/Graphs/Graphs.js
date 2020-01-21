@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Button, View, Text} from 'react-native';
+import MenuButton from '../Components/MenuButton';
 
 class Graphs extends React.Component {
   static navigationOptions = {
@@ -11,7 +12,7 @@ class Graphs extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <View>
-        <Button title="Go home" onPress={() => navigate('MainScreen')} />
+        <MenuButton />
         <Button
           title="Mood History"
           onPress={() => navigate('MoodRatingGraph')}

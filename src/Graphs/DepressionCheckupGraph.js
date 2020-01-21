@@ -4,6 +4,7 @@ import {Button, View, Text} from 'react-native';
 
 import {selectAllDepressionCheckup} from '../Database.js';
 import GenerateGraphs from './GenerateGraphs.js';
+import MenuButton from '../Components/MenuButton.js';
 
 class DepressionCheckupGraph extends React.Component {
   static navigationOptions = {
@@ -14,7 +15,7 @@ class DepressionCheckupGraph extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <View>
-        <Button title="Go home" onPress={() => navigate('MainScreen')} />
+        <MenuButton />
         <Text>Depression Checkups</Text>
         <GenerateGraphs cb={selectAllDepressionCheckup} />
       </View>

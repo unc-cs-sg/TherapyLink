@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import {Button, View} from 'react-native';
+import MenuButton from '../Components/MenuButton';
 
 class Information extends React.Component {
   static navigationOptions = {
@@ -10,7 +11,7 @@ class Information extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <View style={{flex: 1}}>
-        <Button title="Go home" onPress={() => navigate('MainScreen')} />
+        <MenuButton />
         <Button title="Anxiety Info" onPress={() => navigate('Anxiety')} />
         <Button
           title="Depression Info"

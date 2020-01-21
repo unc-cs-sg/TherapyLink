@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, {Fragment} from 'react';
 import {
   Button,
   View,
@@ -9,9 +9,10 @@ import {
   FlatList,
   PushNotificationIOS,
 } from 'react-native';
-import { diaryStyles } from '../styles/DiaryStyles.js';
+import {diaryStyles} from '../styles/DiaryStyles.js';
 import Icon from '../../node_modules/react-native-ionicons';
-import { db, selectAllEntries, removeEntry } from '../Database.js';
+import {db, selectAllEntries, removeEntry} from '../Database.js';
+import MenuButton from '../Components/MenuButton.js';
 
 class Journal extends React.Component {
   constructor(props) {
@@ -50,9 +51,7 @@ class Journal extends React.Component {
   refreshComponent = () => {
     db.transaction(tx => {
       selectAllEntries(tx, temp => this.setState({data: temp}));
-    }
-
-    );
+    });
   };
 
   componentDidMount = () => {
@@ -61,8 +60,8 @@ class Journal extends React.Component {
 
   // Don't call setState() in render! This causes an infinite loop xD
   render() {
-    const { navigate } = this.props.navigation;
-    const { navigation } = this.props;
+    const {navigate} = this.props.navigation;
+    const {navigation} = this.props;
     return (
       <View
         style={{
@@ -72,6 +71,7 @@ class Journal extends React.Component {
           paddingVertical: 10,
           paddingBottom: 100,
         }}>
+        <MenuButton />
         <TouchableOpacity
           style={{
             alignSelf: 'flex-end',
@@ -86,7 +86,7 @@ class Journal extends React.Component {
             justifyContent: 'center',
             zIndex: 1,
           }}
-          onPress={() => navigate('JournalEntry', { JournalIndex: this, id: 0 })}>
+          onPress={() => navigate('JournalEntry', {JournalIndex: this, id: 0})}>
           <Icon name="add" color={'#FFF'} />
         </TouchableOpacity>
 
@@ -94,7 +94,7 @@ class Journal extends React.Component {
           data={this.state.data}
           ItemSeparatorComponent={this.ListSeparator}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <View
               style={{
                 padding: 10,
@@ -116,7 +116,7 @@ class Journal extends React.Component {
                     title: item.title,
                     comment: item.user_comment,
                     id: item.entry_id,
-                    emotionData: item.emotions.split(',')
+                    emotionData: item.emotions.split(','),
                   })
                 }
               />

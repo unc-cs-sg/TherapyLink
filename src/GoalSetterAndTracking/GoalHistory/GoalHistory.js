@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import GoalCard from '../GoalCard/GoalCard';
 import CreateGoalCardModal from '../GoalCard/CreateGoalCardModal';
+import MenuButton from '../../Components/MenuButton';
 
 class GoalHistory extends React.Component {
   static navigationOptions = {
@@ -59,6 +60,7 @@ class GoalHistory extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <View>
+        <MenuButton />
         <ScrollView>
           <Text> Plan History </Text>
           {this.state.plans == null ||

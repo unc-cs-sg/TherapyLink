@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, Text, Button} from 'react-native';
 import QuestionList from './QuestionList.js';
 import {db, today, createCheckup, insertCheckup} from '../Database.js';
+import MenuButton from '../Components/MenuButton.js';
 
 let options = [
   'Not at all',
@@ -106,6 +107,7 @@ export default class Checkup extends React.Component {
     ) {
       screen = (
         <View style={styles.parent}>
+          <MenuButton />
           <Text style={styles.pa}>
             Please answer the questions to the best of your ability. You will be
             provided with your results after the questionnaire.
@@ -129,6 +131,7 @@ export default class Checkup extends React.Component {
       if (this.state.checkup == 'Anxiety') {
         screen = (
           <View style={{flex: 1}}>
+            <MenuButton />
             <View style={styles.one}>
               <Text style={{padding: 5}}>
                 This self-assessment is used for screening and measuring
@@ -172,6 +175,7 @@ export default class Checkup extends React.Component {
       } else if (this.state.checkup == 'Depression') {
         screen = (
           <View style={{flex: 1}}>
+            <MenuButton />
             <View style={styles.one}>
               <Text style={{padding: 5}}>
                 This self-assessment is used for screening and measuring
@@ -220,6 +224,7 @@ export default class Checkup extends React.Component {
     } else {
       screen = (
         <View style={styles.parent}>
+          <MenuButton />
           <Button
             title="Anxiety Checkup"
             onPress={() =>

@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, ScrollView, Text} from 'react-native';
 import {styles} from '../styles/InformationStyles';
+import MenuButton from '../Components/MenuButton';
 
 class Depression extends React.Component {
   static navigationOptions = {
@@ -11,7 +12,7 @@ class Depression extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <ScrollView style={{flex: 1}}>
-        <Button title="Go home" onPress={() => navigate('MainScreen')} />
+        <MenuButton />
         <Text style={styles.h1}>Info</Text>
         <Text style={styles.h2}>What is Depression?</Text>
         <Text style={styles.p}>

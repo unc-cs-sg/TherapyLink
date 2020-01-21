@@ -16,6 +16,7 @@ import {
 import GoalCard from '../GoalCard/GoalCard';
 import CreateGoalCardModal from '../GoalCard/CreateGoalCardModal';
 import GoalChecker from '../GoalChecker/GoalChecker';
+import MenuButton from '../../Components/MenuButton';
 //import datetimepicker for the calendar stuff
 class GoalSetter extends React.Component {
   static navigationOptions = {
@@ -212,6 +213,7 @@ class GoalSetter extends React.Component {
       />
     ) : (
       <View>
+        <MenuButton />
         <ScrollView>
           {this.state.displayModal ? (
             <CreateGoalCardModal

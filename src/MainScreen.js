@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Button, Image} from 'react-native';
+import MenuButton from './Components/MenuButton';
 
 class MainScreen extends React.Component {
   static navigationOptions = {
@@ -11,6 +12,7 @@ class MainScreen extends React.Component {
     const {navigate} = this.props.navigation;
     return (
       <View>
+        <MenuButton />
         <Image
           style={{
             width: 200,
