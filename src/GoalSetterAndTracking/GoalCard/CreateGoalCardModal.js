@@ -168,10 +168,10 @@ class CreateGoalCardModal extends React.Component {
                             let ed = this.state.endDate;
                             let sd = this.state.startDate;
                             if (ed == null || sd == null) {
-                                ToastAndroid.show('You must pick both a start date and an end date.', ToastAndroid.SHORT);
+                                ToastAndroid.showWithGravity('You must pick both a start date and an end date.', ToastAndroid.SHORT, ToastAndroid.CENTER);
                             }
                             else if (new Date(ed).setHours(0,0,0,0) < new Date(sd).setHours(0,0,0,0)) {
-                                ToastAndroid.show('You must pick an end date equal to or after your start date before saving.', ToastAndroid.SHORT);
+                                ToastAndroid.showWithGravity('You must pick an end date equal to or after your start date before saving.', ToastAndroid.SHORT, ToastAndroid.CENTER);
                             } else {
                                 if (!this.props.edit) {
                                     this.props.addPlan(Object.values(this.state.items), this.state.startDate, this.state.endDate);

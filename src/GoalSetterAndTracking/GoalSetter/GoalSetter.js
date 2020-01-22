@@ -105,7 +105,7 @@ class GoalSetter extends React.Component {
 //        newPlans[endDate][startDate].plans.push(items);
         AsyncStorage.setItem('plans', JSON.stringify(newPlans));
         this.getPlans();
-        ToastAndroid.show('Way to go! You have created a plan for self-care.', ToastAndroid.LONG)
+        ToastAndroid.showWithGravity('Way to go! You have created a plan for self-care.', ToastAndroid.LONG, ToastAndroid.CENTER)
     });
   }
 
@@ -167,8 +167,8 @@ class GoalSetter extends React.Component {
 
 
   finishedGoalVerification = (completedItemCount) => {
-    if (completedItemCount > 0) ToastAndroid.show('A congratulatory message.', ToastAndroid.LONG);
-    else ToastAndroid.show('A supportive message.', ToastAndroid.LONG)
+    if (completedItemCount > 0) ToastAndroid.showWithGravity('Great job on taking time for self-care!', ToastAndroid.LONG, ToastAndroid.CENTER);
+    else ToastAndroid.showWithGravity("It's okay, we all get busy. Today is a new day, you can make a new plan.", ToastAndroid.LONG, ToastAndroid.CENTER)
     AsyncStorage.getItem('plans', (err, plansJSON) => {
         let newPlans = JSON.parse(plansJSON);
         this.state.verify.forEach((verifyPlanObj, i) => {

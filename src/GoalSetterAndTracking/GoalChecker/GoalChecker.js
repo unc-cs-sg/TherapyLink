@@ -83,15 +83,15 @@ class GoalChecker extends React.Component {
                  return (
                      <View key={i}>
                      <ScrollView>
-                          <Text> Plan starting {new Date(verifyObj.startDate).toDateString()} and ending {new Date(verifyObj.endDate).toDateString()} </Text>
+                          <Text> For your plan starting {new Date(verifyObj.startDate).toDateString()} and ending {new Date(verifyObj.endDate).toDateString()} have you... </Text>
                           {verifyObj.plan.map((p, i) => {
                             let buttonColorStyle = this.state.buttonColor[tenTimesPageIndex + i];
                             return (
                                 <View>
-                                    <Text> Have you [{p.information}]? </Text>
+                                    <Text> {p.information}? </Text>
                                     <View style={styles.buttonContainer}>
                                         <Button style={styles.button} color={(buttonColorStyle == null || buttonColorStyle == 2) ? "blue" : "green"} title="Yes 🙂" onPress={() => {this.addCompletedItem(tenTimesPageIndex + i)}}/>
-                                        <Button style={styles.button} color={(buttonColorStyle == 1) ? "blue" : "green"} title="Not Yet 🙁" onPress={() => {this.removeCompletedItem(tenTimesPageIndex + i)}}/>
+                                        <Button style={styles.button} color={(buttonColorStyle == 2) ? "green" : "blue"} title="Not Yet 🙁" onPress={() => {this.removeCompletedItem(tenTimesPageIndex + i)}}/>
                                     </View>
                                 </View>
                             )
