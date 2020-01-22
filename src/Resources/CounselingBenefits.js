@@ -17,31 +17,28 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
-
+import MenuButton from '../Components/MenuButton';
 
 class CounselingBenefits extends React.Component {
+  static navigationOptions = {
+    title: 'Employer Sponsored Counseling Benefits',
+  };
 
+  render() {
+    const {navigate} = this.props.navigation;
 
-    static navigationOptions = {
-        title: 'Employer Sponsored Counseling Benefits',
-    };
-
-    render() {
-        const {navigate} = this.props.navigation;
-
-        return (
-          <ScrollView>
-            <Text style={styles.body}>
-            Employee Assistance Program (EAP) is a voluntary, work-based program that offers free and
-            confidential assessments, short-term counseling, referrals,
-            and follow-up services to employees who have personal and/or work-related problems.</Text>
-
-
-          </ScrollView>
-        );
-      };
-
+    return (
+      <ScrollView>
+        <MenuButton />
+        <Text style={styles.body}>
+          Employee Assistance Program (EAP) is a voluntary, work-based program
+          that offers free and confidential assessments, short-term counseling,
+          referrals, and follow-up services to employees who have personal
+          and/or work-related problems.
+        </Text>
+      </ScrollView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

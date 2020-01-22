@@ -6,8 +6,13 @@
  * @flow
  */
 
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {createAppContainer} from 'react-navigation';
+import {createDrawerNavigator} from 'react-navigation-drawer';
+import {createStackNavigator} from 'react-navigation-stack';
+import 'react-native-gesture-handler';
+
+import {Button} from 'react-native';
+import React from 'react';
 
 import MainScreen from './MainScreen.js';
 import Checkup from './Checkup/Checkup.js';
@@ -17,10 +22,15 @@ import JournalOptions from './Journal/JournalOptions.js';
 import NegativeEmotionPanel from './Journal/NegativeEmotionPanel';
 import SituationalScreen from './Journal/SituationalScreen';
 import JournalSummary from './Journal/JournalSummary';
-import Education from './Education.js';
-import Graphs from './Graphs.js';
+import Information from './Information/Information.js';
+import Anxiety from './Information/Anxiety.js';
+import Depression from './Information/Depression.js';
+import Graphs from './Graphs/Graphs.js';
+import Admin from './Admin.js';
 import MoodRating from './MoodRating/MoodRating.js';
 import MoodRatingGraph from './Graphs/MoodRatingGraph.js';
+import AnxietyCheckupGraph from './Graphs/AnxietyCheckupGraph';
+import DepressionCheckupGraph from './Graphs/DepressionCheckupGraph';
 import Resources from './Resources/Resources.js';
 import MentalHealthInfo from './Resources/MentalHealthInfo.js';
 import FindATherapist from './Resources/FindATherapist.js';
@@ -31,31 +41,98 @@ import SuicideCrisis from './Resources/SuicideCrisis.js';
 import GoalSetter from './GoalSetterAndTracking/GoalSetter/GoalSetter.js';
 import GoalHistory from './GoalSetterAndTracking/GoalHistory/GoalHistory.js';
 
-const MainNavigator = createStackNavigator(
-  {
-    MainScreen: { screen: MainScreen },
-    Checkup: { screen: Checkup },
-    Journal: { screen: Journal },
-    JournalEntry: { screen: JournalEntry },
-    JournalOptions: { screen: JournalOptions },
-    NegativeEmotionPanel: { screen: NegativeEmotionPanel },
-    SituationalScreen: { screen: SituationalScreen },
-    JournalSummary: { screen: JournalSummary },
-    Education: { screen: Education },
-    Graphs: { screen: Graphs },
-    MoodRating: { screen: MoodRating },
-    MoodRatingGraph: { screen: MoodRatingGraph },
-    Resources: { screen: Resources },
-    MentalHealthInfo: { screen: MentalHealthInfo },
-    FindATherapist: { screen: FindATherapist },
-    Podcasts: { screen: Podcasts },
-    FinancialAssist: { screen: FinancialAssist },
-    CounselingBenefits: { screen: CounselingBenefits },
-    SuicideCrisis: { screen: SuicideCrisis },
-    Goals: { screen: GoalSetter },
-    GoalHistory: { screen: GoalHistory },
+import {StyleSheet, ScrollView, Text} from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
+import {DrawerItems} from 'react-navigation-drawer';
+
+const CustomDrawerContentComponent = props => (
+  <ScrollView>
+    <SafeAreaView
+      style={styles.container}
+      forceInset={{top: 'always', horizontal: 'never'}}>
+      <Button
+        title="Back"
+        onPress={() => {
+          props.navigation.dangerouslyGetParent().openDrawer();
+          props.navigation.closeDrawer();
+        }}
+      />
+      <DrawerItems {...props} />
+    </SafeAreaView>
+  </ScrollView>
+);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
   },
-  { initialRouteName: 'MainScreen' },
+});
+
+const ResourcesStack = createDrawerNavigator(
+  {
+    Resources: {screen: Resources},
+    MentalHealthInfo: {screen: MentalHealthInfo},
+    FindATherapist: {screen: FindATherapist},
+    Podcasts: {screen: Podcasts},
+    FinancialAssist: {screen: FinancialAssist},
+    CounselingBenefits: {screen: CounselingBenefits},
+    SuicideCrisis: {screen: SuicideCrisis},
+  },
+  {contentComponent: CustomDrawerContentComponent},
+);
+
+const JournalStack = createDrawerNavigator(
+  {
+    Journal: {screen: Journal},
+    JournalEntry: {screen: JournalEntry},
+    JournalOptions: {screen: JournalOptions},
+    JournalSummary: {screen: JournalSummary},
+    NegativeEmotionPanel: {screen: NegativeEmotionPanel},
+    SituationalScreen: {screen: SituationalScreen},
+  },
+  {contentComponent: CustomDrawerContentComponent},
+);
+
+const GraphsStack = createDrawerNavigator(
+  {
+    Graphs: {screen: Graphs},
+    MoodRatingGraph: {screen: MoodRatingGraph},
+    AnxietyCheckupGraph: {screen: AnxietyCheckupGraph},
+    DepressionCheckupGraph: {screen: DepressionCheckupGraph},
+  },
+  {contentComponent: CustomDrawerContentComponent},
+);
+
+const GoalsStack = createDrawerNavigator(
+  {
+    Goals: {screen: GoalSetter},
+    GoalHistory: {screen: GoalHistory},
+  },
+  {contentComponent: CustomDrawerContentComponent},
+);
+
+const InformationStack = createDrawerNavigator(
+  {
+    Information: {screen: Information},
+    Anxiety: {screen: Anxiety},
+    Depression: {screen: Depression},
+  },
+  {contentComponent: CustomDrawerContentComponent},
+);
+
+const MainNavigator = createDrawerNavigator(
+  {
+    MainScreen: {screen: MainScreen},
+    Journal: {screen: JournalStack},
+    Checkup: {screen: Checkup},
+    Information: {screen: InformationStack},
+    Graphs: {screen: GraphsStack},
+    Resources: {screen: ResourcesStack},
+    MoodRating: {screen: MoodRating},
+    Goals: {screen: GoalsStack},
+    Admin: {screen: Admin},
+  },
+  {initialRouteName: 'MainScreen'},
 );
 
 const App = createAppContainer(MainNavigator);

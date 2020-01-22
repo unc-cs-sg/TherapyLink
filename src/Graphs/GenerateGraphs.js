@@ -4,13 +4,13 @@ import {Button, Dimensions, View, Text} from 'react-native';
 
 import {LineChart} from 'react-native-chart-kit';
 
-import { graphStyles } from './styles/GraphStyles.js';
+import {graphStyles} from '../styles/GraphStyles.js';
 
-import SQLite from 'react-native-sqlite-2';
+import {db} from '../Database.js';
 
-const db = SQLite.openDatabase('test.db', '1.0', '', 1);
+import {withNavigation} from 'react-navigation';
 
-class Graphs extends React.Component {
+class GenerateGraphs extends React.Component {
   static navigationOptions = {
     title: 'Graphs',
   };
@@ -18,34 +18,31 @@ class Graphs extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {data: [0], labels: [0]};
+    this.state = {data: [0], labels: [0], show: false};
   }
 
-  all = () => {
-    db.transaction(txn => {
-      txn.executeSql('SELECT * FROM Checkups', [], (tx, res) => {
-        data = [];
-        labels = [];
-        for (let i = 0; i < res.rows.length; ++i) {
-          let it = res.rows.item(i);
-          labels.push(it.date);
-          data.push(it.score);
-          this.setState({data, labels});
-        }
-      });
-    });
+  componentWillUnmount = () => {
+    this.willFocusSubscription.remove();
   };
 
   componentDidMount = () => {
-    this.all();
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      payload => {
+        db.transaction(t => {
+          this.props.cb(t, results => {
+            if (results.data.length > 0) {
+              this.setState({...results, show: true});
+            }
+          });
+        });
+      },
+    );
   };
 
-  render() {
-    const {navigate} = this.props.navigation;
+  render = () => {
     return (
-      <View>
-        <Button title="Go home" onPress={() => navigate('MainScreen')} />
-        <Text>Progress Chart</Text>
+      this.state.show && (
         <LineChart
           data={{
             labels: this.state.labels,
@@ -74,12 +71,9 @@ class Graphs extends React.Component {
             },
           }}
         />
-        <View style={graphStyles.navButtons}>
-          <Button title="Mood History" onPress={() => navigate('MoodRatingGraph')} />
-        </View>
-      </View>
+      )
     );
-  }
+  };
 }
 
-export default Graphs;
+export default withNavigation(GenerateGraphs);

@@ -4,6 +4,7 @@ import {
     View,
     Text,
     Alert,
+    ScrollView,
 } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 
@@ -94,35 +95,153 @@ const items = [
         isNeg: true,
     },
     {
-        id: '17',
+        id: '18',
         name: 'Scared',
         isNeg: true,
     },
     {
-        id: '18',
+        id: '19',
         name: 'Surprised',
         isNeg: false,
     },
     {
-        id: '19',
+        id: '20',
         name: 'Worthless',
         isNeg: true,
     },
 ];
+const itemsObjects = {
+    "Angry": {
+        id: '0',
+        name: 'Angry',
+        isNeg: true,
+    },
+    "Anxious": {
+        id: '1',
+        name: 'Anxious',
+        isNeg: true,
+    },
+    "Ashamed": {
+        id: '2',
+        name: 'Ashamed',
+        isNeg: true,
+    },
+    "Awkward": {
+        id: '3',
+        name: 'Awkward',
+        isNeg: true,
+    },
+    "Calm": {
+        id: '4',
+        name: 'Calm',
+        isNeg: false,
+    },
+    "Confused": {
+        id: '5',
+        name: 'Confused',
+        isNeg: true,
+    },
+    "Disgusted": {
+        id: '6',
+        name: 'Disgusted',
+        isNeg: true,
+    },
+    "Empty": {
+        id: '7',
+        name: 'Empty',
+        isNeg: true,
+    },
+    "Excited": {
+        id: '8',
+        name: 'Excited',
+        isNeg: false,
+    },
+    "Guilty": {
+        id: '9',
+        name: 'Guilty',
+        isNeg: true,
+    },
+    "Happy": {
+        id: '10',
+        name: 'Happy',
+        isNeg: false,
+    },
+    "Hopeful": {
+        id: '11',
+        name: 'Hopeful',
+        isNeg: false,
+    },
+    "Hopeless": {
+        id: '12',
+        name: 'Hopeless',
+        isNeg: true,
+    },
+    "Jealous": {
+        id: '13',
+        name: 'Jealous',
+        isNeg: true,
+    },
+    "Motivated": {
+        id: '14',
+        name: 'Motivated',
+        isNeg: false,
+    },
+    "Overwhelmed": {
+        id: '15',
+        name: 'Overwhelmed',
+        isNeg: true,
+    },
+    "Sad": {
+        id: '16',
+        name: 'Sad',
+        isNeg: true,
+    },
+    "Scared": {
+        id: '18',
+        name: 'Scared',
+        isNeg: true,
+    },
+    "Surprised": {
+        id: '19',
+        name: 'Surprised',
+        isNeg: false,
+    },
+    "Worthless": {
+        id: '20',
+        name: 'Worthless',
+        isNeg: true,
+    },
+};
 
 class JournalOptions extends React.Component {
     constructor(props) {
         super(props);
         this.state = { selectedItems: [], selectedItemObjects: [], };
-        // console.log("item[0]: " + items[0].isNeg);
     }
 
     static navigationOptions = {
         title: 'How did you feel?',
     };
 
+    hasNegativeEmotion = () => {
+        const { selectedItemObjects } = this.state;
+        for (let i = 0; i < selectedItemObjects.length; ++i) {
+            if (selectedItemObjects[i].isNeg) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    onSelectedItemsChange = selectedItems => {
+        this.setState({ selectedItems });
+        console.log(selectedItems);
+    };
+
     onSelectedItemsSubmit = () => {
         const { selectedItems } = this.state;
+        
+        this.setState({selectedItemObjects: []});
 
         selectedItems.forEach(val => {
             this.setState(prevState => ({
@@ -131,10 +250,42 @@ class JournalOptions extends React.Component {
         });
     }
 
-    onSelectedItemsChange = selectedItems => {
-        this.setState({ selectedItems });
-        console.log(selectedItems);
-    };
+    handleNavigation = () => {
+        const { navigate } = this.props.navigation;
+        const { navigation } = this.props;
+        const { selectedItemObjects } = this.state;
+        if (this.hasNegativeEmotion()) {
+            navigate('NegativeEmotionPanel', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: selectedItemObjects });
+        } else {
+            navigate('JournalSummary', { JournalEntry: navigation.getParam('JournalEntry', null), emotionData: selectedItemObjects, isPositive: true });
+        }
+    }
+
+    componentWillUnmount = () => {
+        this.willFocusSubscription.remove();
+    }
+
+    componentDidMount = () => {
+        this.willFocusSubscription = this.props.navigation.addListener(
+            'willFocus',
+            payload => {
+                this.setState(this.baseState);
+                const { navigation } = this.props;
+                const emotionData = navigation.getParam('emotionData', []);
+                console.log(emotionData);
+
+                let emotionState = emotionData.map((
+                    emotion => itemsObjects[emotion].id
+                ));
+
+                console.log("emotionState: " + emotionState);
+
+                this.setState({ selectedItems: emotionState });
+            }
+        );
+    }
+
+    // Have to test two cases: creating a new entry and updating an entry since not sure if update will change emotionState to trigger function
 
     // componentDidUpdate will not be called on initial render
     // This method is called whenever the state changes following
@@ -144,8 +295,7 @@ class JournalOptions extends React.Component {
         if (prevState.selectedItemObjects !== this.state.selectedItemObjects) {
             console.log("selectedItemObjects updated!");
             console.log(this.state.selectedItemObjects);
-            // this.props.navigation.state.params.JournalEntry.refreshComponent(selectedItemObjects);
-            navigate('JournalEntry', { emotions: this.state.selectedItemObjects });
+            this.handleNavigation();
         }
     }
 
@@ -154,7 +304,7 @@ class JournalOptions extends React.Component {
         const { selectedItems } = this.state;
 
         return (
-            <View style={{ flex: 1, paddingHorizontal: 20 }}>
+            <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
                 <MultiSelect
                     hideTags
                     items={items}
@@ -182,7 +332,7 @@ class JournalOptions extends React.Component {
                 <Button title="Save" onPress={() => {
                     this.onSelectedItemsSubmit();
                 }} />
-            </View>
+            </ScrollView>
         )
     }
 }

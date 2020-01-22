@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, View, Text, Button} from 'react-native';
 import QuestionList from './QuestionList.js';
-import SQLite from 'react-native-sqlite-2';
-import moment from 'moment';
+import {db, today, createCheckup, insertCheckup} from '../Database.js';
+import MenuButton from '../Components/MenuButton.js';
 
 let options = [
   'Not at all',
@@ -58,11 +58,22 @@ function depressionRange(v) {
     return 'severe';
   }
 }
-const db = SQLite.openDatabase('test.db', '1.0', '', 1);
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+  },
+  cell: {
+    flex: 1,
+  },
   pa: {
-    padding: 10,
+    padding: 20,
+  },
+  parent: {
+    flex: 1,
+  },
+  one: {
+    flex: 1,
   },
 });
 
@@ -79,19 +90,10 @@ export default class Checkup extends React.Component {
 
   handleFinish = total => {
     this.setState({screen: 'Finished', result: total});
-    // save to database here
 
-    db.transaction(txn => {
-      // id, date, type, score
-      txn.executeSql(
-        'CREATE TABLE IF NOT EXISTS Checkups(id INTEGER PRIMARY KEY NOT NULL, date VARCHAR(30), type VARCHAR(10), score INTEGER)',
-        [],
-      );
-
-      txn.executeSql(
-        'insert into Checkups (date, type, score) values (?, ?, ?)',
-        [moment().format('YYYY-MM-DD'), this.state.checkup, total],
-      );
+    db.transaction(t => {
+      createCheckup(t);
+      insertCheckup(t, today(), this.state.checkup, total);
     });
   };
 
@@ -104,7 +106,8 @@ export default class Checkup extends React.Component {
       (this.state.checkup == 'Anxiety' || this.state.checkup == 'Depression')
     ) {
       screen = (
-        <View>
+        <View style={styles.parent}>
+          <MenuButton />
           <Text style={styles.pa}>
             Please answer the questions to the best of your ability. You will be
             provided with your results after the questionnaire.
@@ -127,114 +130,101 @@ export default class Checkup extends React.Component {
     } else if (this.state.screen == 'Finished') {
       if (this.state.checkup == 'Anxiety') {
         screen = (
-          <View>
-            <Text style={styles.pa}>
-              This self-assessment is used for screening and measuring severity
-              of generalized anxiety disorder (GAD). However, it cannot be used
-              as replacement for clinical assessment, and additional evaluation
-              by a licensed health professional is needed to confirm a diagnosis
-              of GAD. The results of this assessment can be used to help you
-              track symptom changes, and make decisions about your health.
-            </Text>
-            <Text style={styles.pa}>
-              The assessment is scored on a scale of 0-21. No matter your
-              results, if you have any concern about your level of anxiety
-              please contact a health professional.
-            </Text>
-            <Text style={styles.pa}>
-              Your result is {this.state.result} indicating a{' '}
-              {anxietyRange(this.state.result)} level of anxiety.
-            </Text>
-            <Text style={styles.pa}>
-              Minimal: 0-4, Mild: 5-9, Moderate: 10-14, Moderately Severe: 15-21
-            </Text>
+          <View style={{flex: 1}}>
+            <MenuButton />
+            <View style={styles.one}>
+              <Text style={{padding: 5}}>
+                This self-assessment is used for screening and measuring
+                severity of generalized anxiety disorder (GAD). However, it
+                cannot be used as replacement for clinical assessment, and
+                additional evaluation by a licensed health professional is
+                needed to confirm a diagnosis of GAD. The results of this
+                assessment can be used to help you track symptom changes, and
+                make decisions about your health.
+              </Text>
+              <Text style={{padding: 5}}>
+                The assessment is scored on a scale of 0-21. No matter your
+                results, if you have any concern about your level of anxiety
+                please contact a health professional.
+              </Text>
+              <Text style={{padding: 5}}>
+                Your result is {this.state.result} indicating a{' '}
+                {anxietyRange(this.state.result)} level of anxiety.
+              </Text>
+            </View>
+            <View style={{flex: 1, justifyContent: 'space-around'}}>
+              <View style={styles.row}>
+                <Text style={styles.cell}>Minimal</Text>
+                <Text style={styles.cell}>0-4</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.cell}>Mild</Text>
+                <Text style={styles.cell}>5-9</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.cell}>Moderate</Text>
+                <Text style={styles.cell}>10-14</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.cell}>Moderately Severe</Text>
+                <Text style={styles.cell}>15-21</Text>
+              </View>
+            </View>
           </View>
         );
       } else if (this.state.checkup == 'Depression') {
         screen = (
-          <View>
-            <Text style={styles.pa}>
-              This self-assessment is used for screening and measuring severity
-              of depression. However, it cannot be used as replacement for
-              clinical assessment, and additional evaluation by a licensed
-              health professional is needed to confirm a diagnosis of
-              depression. The results of this assessment may be useful to help
-              you track symptom changes, and assist you in making decisions
-              about your health.
-            </Text>
-            <Text style={styles.pa}>
-              The assessment is scored on a scale of 0-27. No matter your
-              results, if you have any concern about your level of depression
-              please contact a health professional.
-            </Text>
-            <Text style={styles.pa}>
-              Your result is {this.state.result} indicating a{' '}
-              {depressionRange(this.state.result)} level of depression.
-            </Text>
-            <View style={{flex: 1}}>
-              <View
-                style={{
-                  flex: 1,
-                  alignSelf: 'stretch',
-                  textAlign: 'center',
-                  flexDirection: 'row',
-                }}>
-                <Text style={{flex: 1, alignSelf: 'center'}}>Minimal</Text>
-                <Text style={{flex: 1, alignSelf: 'center'}}>0-4</Text>
+          <View style={{flex: 1}}>
+            <MenuButton />
+            <View style={styles.one}>
+              <Text style={{padding: 5}}>
+                This self-assessment is used for screening and measuring
+                severity of depression. However, it cannot be used as
+                replacement for clinical assessment, and additional evaluation
+                by a licensed health professional is needed to confirm a
+                diagnosis of depression. The results of this assessment may be
+                useful to help you track symptom changes, and assist you in
+                making decisions about your health.
+              </Text>
+              <Text style={{padding: 5}}>
+                The assessment is scored on a scale of 0-27. No matter your
+                results, if you have any concern about your level of depression
+                please contact a health professional.
+              </Text>
+              <Text style={{padding: 5}}>
+                Your result is {this.state.result} indicating a{' '}
+                {depressionRange(this.state.result)} level of depression.
+              </Text>
+            </View>
+            <View style={{flex: 1, justifyContent: 'space-around'}}>
+              <View style={styles.row}>
+                <Text style={styles.cell}>Minimal</Text>
+                <Text style={styles.cell}>0-4</Text>
               </View>
-              <View
-                style={{
-                  flex: 1,
-                  alignSelf: 'stretch',
-                  textAlign: 'center',
-                  flexDirection: 'row',
-                }}>
-                <Text style={{flex: 1, alignSelf: 'center'}}>Mild</Text>
-                <Text style={{flex: 1, alignSelf: 'center'}}>5-9</Text>
+              <View style={styles.row}>
+                <Text style={styles.cell}>Mild</Text>
+                <Text style={styles.cell}>5-9</Text>
               </View>
-              <View
-                style={{
-                  flex: 1,
-                  alignSelf: 'stretch',
-                  textAlign: 'center',
-                  flexDirection: 'row',
-                }}>
-                <Text style={{flex: 1, alignSelf: 'center'}}>Moderate</Text>
-                <Text style={{flex: 1, alignSelf: 'center'}}>10-14</Text>
+              <View style={styles.row}>
+                <Text style={styles.cell}>Moderate</Text>
+                <Text style={styles.cell}>10-14</Text>
               </View>
-              <View
-                style={{
-                  flex: 1,
-                  alignSelf: 'stretch',
-                  textAlign: 'center',
-                  flexDirection: 'row',
-                }}>
-                <Text style={{flex: 1, alignSelf: 'center'}}>
-                  Moderately Severe
-                </Text>
-                <Text style={{flex: 1, alignSelf: 'center'}}>15-19</Text>
+              <View style={styles.row}>
+                <Text style={styles.cell}>Moderately Severe</Text>
+                <Text style={styles.cell}>15-19</Text>
               </View>
-              <View
-                style={{
-                  flex: 1,
-                  alignSelf: 'stretch',
-                  textAlign: 'center',
-                  flexDirection: 'row',
-                }}>
-                <Text style={{flex: 1, alignSelf: 'center'}}>Severe</Text>
-                <Text style={{flex: 1, alignSelf: 'center'}}>20-27</Text>
+              <View style={styles.row}>
+                <Text style={styles.cell}>Severe</Text>
+                <Text style={styles.cell}>20-27</Text>
               </View>
             </View>
-            <Text style={styles.pa}>
-              Minimal: 0-4, Mild: 5-9, Moderate: 10-14, Moderately Severe:
-              15-19, Severe: 20-27
-            </Text>
           </View>
         );
       }
     } else {
       screen = (
-        <View>
+        <View style={styles.parent}>
+          <MenuButton />
           <Button
             title="Anxiety Checkup"
             onPress={() =>

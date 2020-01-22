@@ -2,13 +2,13 @@ import React from 'react';
 
 import {Button, View, Text} from 'react-native';
 
-import {selectAllDailyMoods} from '../Database.js';
+import {selectAllDepressionCheckup} from '../Database.js';
 import GenerateGraphs from './GenerateGraphs.js';
 import MenuButton from '../Components/MenuButton.js';
 
-class MoodRatingGraph extends React.Component {
+class DepressionCheckupGraph extends React.Component {
   static navigationOptions = {
-    title: 'Mood History',
+    title: 'Depression Checkups',
   };
 
   render = () => {
@@ -16,11 +16,11 @@ class MoodRatingGraph extends React.Component {
     return (
       <View>
         <MenuButton />
-        <Text>Mood History</Text>
-        <GenerateGraphs cb={selectAllDailyMoods} />
+        <Text>Depression Checkups</Text>
+        <GenerateGraphs cb={selectAllDepressionCheckup} />
       </View>
     );
   };
 }
 
-export default MoodRatingGraph;
+export default DepressionCheckupGraph;
