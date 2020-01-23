@@ -64,13 +64,12 @@ class MoodRating extends React.Component {
       createDailyMoods(t);
       addOrUpdateDailyMoods(t, today(), mood);
     });
-    this.generateSaveMessage(today(), mood);
+    this.generateSaveMessage(mood);
   };
 
-  async generateSaveMessage(date, mood) {
-    // Message based on mood
+  async generateSaveMessage(mood) {
     Alert.alert(
-      'Your ' + date + ' mood has been saved.',
+      'Your mood has been saved.',
       moodMessages[mood - 1],
       [{text: 'OK'}],
     );
