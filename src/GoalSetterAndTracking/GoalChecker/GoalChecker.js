@@ -75,14 +75,12 @@ class GoalChecker extends React.Component {
 
   render() {
     return (
-        <ViewPagerAndroid
-          style={styles.viewPager}
-          initialPage={0}>
+        <View>
+        <ScrollView>
           {this.state.verify.map((verifyObj, i) => {
                  let tenTimesPageIndex = i * 10;
                  return (
                      <View key={i}>
-                     <ScrollView>
                           <Text> For your plan starting {new Date(verifyObj.startDate).toDateString()} and ending {new Date(verifyObj.endDate).toDateString()} have you... </Text>
                           {verifyObj.plan.map((p, i) => {
                             let buttonColorStyle = this.state.buttonColor[tenTimesPageIndex + i];
@@ -96,15 +94,14 @@ class GoalChecker extends React.Component {
                                 </View>
                             )
                           })}
-                          <Text> Scroll to the next page. </Text>
-                     </ScrollView>
                      </View>
                  );
           })}
           <View key="done">
             <Button title="Finished Checking Goals" onPress={() => {this.props.finishedGoalVerification(this.state.completedItemCount)}}/>
           </View>
-        </ViewPagerAndroid>
+        </ScrollView>
+        </View>
       );
   }
 
