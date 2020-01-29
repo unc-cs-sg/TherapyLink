@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import {Button, View} from 'react-native';
 import MenuButton from '../Components/MenuButton';
 

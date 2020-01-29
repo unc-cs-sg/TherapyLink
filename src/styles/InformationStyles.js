@@ -10,6 +10,10 @@ export const styles = StyleSheet.create({
     fontSize: 36,
     margin: 10,
   },
+  link: {
+    textDecorationLine: 'underline',
+    color: 'blue',
+  },
   h2: {
     fontSize: 24,
     margin: 10,
