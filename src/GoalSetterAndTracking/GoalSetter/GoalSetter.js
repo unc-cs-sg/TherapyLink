@@ -11,141 +11,156 @@ import {
   Button,
   StatusBar,
   AsyncStorage,
-  ToastAndroid
+  ToastAndroid,
 } from 'react-native';
-import GoalCard from '../GoalCard/GoalCard'
-import CreateGoalCardModal from '../GoalCard/CreateGoalCardModal'
-import GoalChecker from '../GoalChecker/GoalChecker'
+import GoalCard from '../GoalCard/GoalCard';
+import CreateGoalCardModal from '../GoalCard/CreateGoalCardModal';
+import GoalChecker from '../GoalChecker/GoalChecker';
+import MenuButton from '../../Components/MenuButton';
 //import datetimepicker for the calendar stuff
 class GoalSetter extends React.Component {
   static navigationOptions = {
     title: 'Self Care Plan',
   };
 
-
   constructor(props) {
-      super(props)
-      this.state = {
-        displayModal: false,
-        editMode: false,
-        plans: [],
-        verify: [],
-        editDetails: {}
-      }
-      this.getPlans()
+    super(props);
+    this.state = {
+      displayModal: false,
+      editMode: false,
+      plans: [],
+      verify: [],
+      editDetails: {},
+    };
+    this.getPlans();
   }
 
   getPlans = async () => {
-//  AsyncStorage.clear();
+    //  AsyncStorage.clear();
     AsyncStorage.getItem('plans', (err, plansJSON) => {
-        let plans = JSON.parse(plansJSON);
-        let plansToRender = [];
-        let verifyPlans = [];
-        for ( endDate in plans) {
-            let newEndDate = new Date(endDate);
-            let newDate = new Date();
-            newEndDate.setHours(0,0,0,0);
-            newDate.setHours(0,0,0,0);
-            if (newEndDate >= newDate) {
-                for ( startDate in plans[endDate]) {
-                    plans[endDate][startDate].plans.forEach((planObj, i) => {
-//                    plans[endDate][startDate].plans.forEach((plan, i) => {
-                        let plan = planObj.items;
-                        let newPlan = {plan, startDate, endDate, index: i};
-                        plansToRender.push(newPlan);
-                    })
-                }
-            }
-            else {
-              for ( startDate in plans[endDate]) {
-                      plans[endDate][startDate].plans.forEach((planObj, i) => {
-                          if (!planObj.finished) {
-                              verifyPlans.push({plan: planObj.items, startDate, endDate, index: i, finished: planObj.finished});
-                          }
-                      })
-
+      let plans = JSON.parse(plansJSON);
+      let plansToRender = [];
+      let verifyPlans = [];
+      for (endDate in plans) {
+        let newEndDate = new Date(endDate);
+        let newDate = new Date();
+        newEndDate.setHours(0, 0, 0, 0);
+        newDate.setHours(0, 0, 0, 0);
+        if (newEndDate >= newDate) {
+          for (startDate in plans[endDate]) {
+            plans[endDate][startDate].plans.forEach((planObj, i) => {
+              //                    plans[endDate][startDate].plans.forEach((plan, i) => {
+              let plan = planObj.items;
+              let newPlan = {plan, startDate, endDate, index: i};
+              plansToRender.push(newPlan);
+            });
+          }
+        } else {
+          for (startDate in plans[endDate]) {
+            plans[endDate][startDate].plans.forEach((planObj, i) => {
+              if (!planObj.finished) {
+                verifyPlans.push({
+                  plan: planObj.items,
+                  startDate,
+                  endDate,
+                  index: i,
+                  finished: planObj.finished,
+                });
               }
-            }
+            });
+          }
         }
-//        console.log(verifyPlans);
-        this.setState({
-            plans: plansToRender,
-            verify: verifyPlans
-        })
-    })
-  }
+      }
+      //        console.log(verifyPlans);
+      this.setState({
+        plans: plansToRender,
+        verify: verifyPlans,
+      });
+    });
+  };
 
   displayModal = () => {
     this.setState({
-        displayModal: !this.state.displayModal,
-        editMode: false,
-        editDetails: {}
-    })
-  }
+      displayModal: !this.state.displayModal,
+      editMode: false,
+      editDetails: {},
+    });
+  };
 
   addPlan = async (items, startDate, endDate) => {
     AsyncStorage.getItem('plans', (err, plansJSON) => {
-        let newPlans = JSON.parse(plansJSON);
-        if (newPlans == null || newPlans == undefined) {
-            newPlans = {};
-            newPlans[endDate] = {};
-            newPlans[endDate][startDate] = {};
-            newPlans[endDate][startDate].plans = [];
-        }
-        if (!newPlans.hasOwnProperty(endDate)) {
-            newPlans[endDate] = {};
-            newPlans[endDate][startDate] = {};
-            newPlans[endDate][startDate].plans = [];
-        }
-        if (!newPlans[endDate].hasOwnProperty(startDate)) {
-            newPlans[endDate][startDate] = {};
-            newPlans[endDate][startDate].plans = [];
-        }
-        newPlans[endDate][startDate].plans.push({items, finished: false})
-//        newPlans[endDate][startDate].plans.push(items);
-        AsyncStorage.setItem('plans', JSON.stringify(newPlans));
-        this.getPlans();
-        ToastAndroid.showWithGravity('Way to go! You have created a plan for self-care.', ToastAndroid.LONG, ToastAndroid.CENTER)
+      let newPlans = JSON.parse(plansJSON);
+      if (newPlans == null || newPlans == undefined) {
+        newPlans = {};
+        newPlans[endDate] = {};
+        newPlans[endDate][startDate] = {};
+        newPlans[endDate][startDate].plans = [];
+      }
+      if (!newPlans.hasOwnProperty(endDate)) {
+        newPlans[endDate] = {};
+        newPlans[endDate][startDate] = {};
+        newPlans[endDate][startDate].plans = [];
+      }
+      if (!newPlans[endDate].hasOwnProperty(startDate)) {
+        newPlans[endDate][startDate] = {};
+        newPlans[endDate][startDate].plans = [];
+      }
+      newPlans[endDate][startDate].plans.push({items, finished: false});
+      //        newPlans[endDate][startDate].plans.push(items);
+      AsyncStorage.setItem('plans', JSON.stringify(newPlans));
+      this.getPlans();
+      ToastAndroid.showWithGravity(
+        'Way to go! You have created a plan for self-care.',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
     });
-  }
+  };
 
-  editPlan = async (items, startDate, endDate, newStartDate, newEndDate, index) => {
+  editPlan = async (
+    items,
+    startDate,
+    endDate,
+    newStartDate,
+    newEndDate,
+    index,
+  ) => {
     AsyncStorage.getItem('plans', (err, plansJSON) => {
-            let newPlans = JSON.parse(plansJSON);
-            newPlans[endDate][startDate].plans.splice(index, 1);
-            if (newPlans[endDate][startDate].plans == null) {
-                delete newPlans[endDate][startDate];
-                if (newPlans[endDate] == null || newPlans[endDate] == {}) {
-                    delete newPlans[endDate];
-                }
-            }
+      let newPlans = JSON.parse(plansJSON);
+      newPlans[endDate][startDate].plans.splice(index, 1);
+      if (newPlans[endDate][startDate].plans == null) {
+        delete newPlans[endDate][startDate];
+        if (newPlans[endDate] == null || newPlans[endDate] == {}) {
+          delete newPlans[endDate];
+        }
+      }
 
-            if (newPlans == null || newPlans == undefined) {
-                newPlans = {};
-                newPlans[newEndDate] = {};
-                newPlans[newEndDate][newStartDate] = {};
-                newPlans[newEndDate][newStartDate].plans = [];
-            }
-            if (!newPlans.hasOwnProperty(newEndDate)) {
-                newPlans[newEndDate] = {};
-                newPlans[newEndDate][newStartDate] = {};
-                newPlans[newEndDate][newStartDate].plans = [];
-            }
-            if (!newPlans[newEndDate].hasOwnProperty(newStartDate)) {
-                newPlans[newEndDate][newStartDate] = {};
-                newPlans[newEndDate][newStartDate].plans = [];
-            }
-            newPlans[newEndDate][newStartDate].plans.push({items, finished: false})
+      if (newPlans == null || newPlans == undefined) {
+        newPlans = {};
+        newPlans[newEndDate] = {};
+        newPlans[newEndDate][newStartDate] = {};
+        newPlans[newEndDate][newStartDate].plans = [];
+      }
+      if (!newPlans.hasOwnProperty(newEndDate)) {
+        newPlans[newEndDate] = {};
+        newPlans[newEndDate][newStartDate] = {};
+        newPlans[newEndDate][newStartDate].plans = [];
+      }
+      if (!newPlans[newEndDate].hasOwnProperty(newStartDate)) {
+        newPlans[newEndDate][newStartDate] = {};
+        newPlans[newEndDate][newStartDate].plans = [];
+      }
+      newPlans[newEndDate][newStartDate].plans.push({items, finished: false});
 
-            AsyncStorage.setItem('plans', JSON.stringify(newPlans));
-            this.getPlans();
-        });
-    this.setState({
-        editDetails: {},
-        editMode: false,
-        displayModal: false
+      AsyncStorage.setItem('plans', JSON.stringify(newPlans));
+      this.getPlans();
     });
-  }
+    this.setState({
+      editDetails: {},
+      editMode: false,
+      displayModal: false,
+    });
+  };
 
   showEditModal = (plan, sd, ed, i) => {
     let items = {};
@@ -153,82 +168,140 @@ class GoalSetter extends React.Component {
     let endDate = new Date(ed);
     let index = i;
     let lastUsedKey = Math.max(plan.length, 3);
-    plan.forEach((p) => {
-        let newObj = {[p.key]: p}
-        items = Object.assign({}, items, newObj);
+    plan.forEach(p => {
+      let newObj = {[p.key]: p};
+      items = Object.assign({}, items, newObj);
     });
-    let editDetails = {items, startDate, endDate, lastUsedKey, index}
+    let editDetails = {items, startDate, endDate, lastUsedKey, index};
     this.setState({
-        editMode: true,
-        displayModal: true,
-        editDetails
-    })
-  }
-
-
-  finishedGoalVerification = (completedItemCount) => {
-    if (completedItemCount > 0) ToastAndroid.showWithGravity('Great job on taking time for self-care!', ToastAndroid.LONG, ToastAndroid.CENTER);
-    else ToastAndroid.showWithGravity("It's okay, we all get busy. Today is a new day, you can make a new plan.", ToastAndroid.LONG, ToastAndroid.CENTER)
-    AsyncStorage.getItem('plans', (err, plansJSON) => {
-        let newPlans = JSON.parse(plansJSON);
-        this.state.verify.forEach((verifyPlanObj, i) => {
-//            console.log(verifyPlanObj);
-            newPlans[verifyPlanObj.endDate][verifyPlanObj.startDate].plans[verifyPlanObj.index].finished = true;
-        });
-        AsyncStorage.setItem('plans', JSON.stringify(newPlans));
-        this.getPlans();
+      editMode: true,
+      displayModal: true,
+      editDetails,
     });
-  }
+  };
+
+  finishedGoalVerification = completedItemCount => {
+    if (completedItemCount > 0)
+      ToastAndroid.showWithGravity(
+        'Great job on taking time for self-care!',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    else
+      ToastAndroid.showWithGravity(
+        "It's okay, we all get busy. Today is a new day, you can make a new plan.",
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    AsyncStorage.getItem('plans', (err, plansJSON) => {
+      let newPlans = JSON.parse(plansJSON);
+      this.state.verify.forEach((verifyPlanObj, i) => {
+        //            console.log(verifyPlanObj);
+        newPlans[verifyPlanObj.endDate][verifyPlanObj.startDate].plans[
+          verifyPlanObj.index
+        ].finished = true;
+      });
+      AsyncStorage.setItem('plans', JSON.stringify(newPlans));
+      this.getPlans();
+    });
+  };
 
   componentDidMount() {
     this.getPlans();
   }
 
-
   render() {
     const {navigate} = this.props.navigation;
 
-    return (
-        (this.state.verify != null && this.state.verify != [] && this.state.verify.length != 0)
-        ?
-        <GoalChecker verify={this.state.verify} finishedGoalVerification={(completedItemCount) => this.finishedGoalVerification(completedItemCount)}/>
-        :
-        <View>
+    return this.state.verify != null &&
+      this.state.verify != [] &&
+      this.state.verify.length != 0 ? (
+      <GoalChecker
+        verify={this.state.verify}
+        finishedGoalVerification={completedItemCount =>
+          this.finishedGoalVerification(completedItemCount)
+        }
+      />
+    ) : (
+      <View>
         <ScrollView>
-            {(this.state.displayModal)
-                ?
-                    <CreateGoalCardModal
-                        displayModal = {() => this.displayModal()}
-                        addPlan = {(items, startDate, endDate) => this.addPlan(items, startDate, endDate)}
-                        editPlan = {(items, startDate, endDate, newStartDate, newEndDate, index) => this.editPlan(items, startDate, endDate, newStartDate, newEndDate, index)}
-                        edit = {this.state.editMode}
-                        items = {this.state.editMode ? this.state.editDetails.items : {}}
-                        startDate= {this.state.editMode ? this.state.editDetails.startDate: null}
-                        endDate= {this.state.editMode ? this.state.editDetails.endDate: null}
-                        lastUsedKey= {this.state.editMode ? this.state.editDetails.lastUsedKey : 3}
-                        index= {this.state.editMode ? this.state.editDetails.index : -1}
+          {this.state.displayModal ? (
+            <CreateGoalCardModal
+              displayModal={() => this.displayModal()}
+              addPlan={(items, startDate, endDate) =>
+                this.addPlan(items, startDate, endDate)
+              }
+              editPlan={(
+                items,
+                startDate,
+                endDate,
+                newStartDate,
+                newEndDate,
+                index,
+              ) =>
+                this.editPlan(
+                  items,
+                  startDate,
+                  endDate,
+                  newStartDate,
+                  newEndDate,
+                  index,
+                )
+              }
+              edit={this.state.editMode}
+              items={this.state.editMode ? this.state.editDetails.items : {}}
+              startDate={
+                this.state.editMode ? this.state.editDetails.startDate : null
+              }
+              endDate={
+                this.state.editMode ? this.state.editDetails.endDate : null
+              }
+              lastUsedKey={
+                this.state.editMode ? this.state.editDetails.lastUsedKey : 3
+              }
+              index={this.state.editMode ? this.state.editDetails.index : -1}
+            />
+          ) : (
+            <View>
+              <MenuButton />
+              <View style={styles.buttonContainer}>
+                <Button
+                  style={styles.button}
+                  title="Create Plan"
+                  onPress={this.displayModal}
+                />
+                <Button
+                  style={styles.button}
+                  title="History"
+                  onPress={() => navigate('GoalHistory')}
+                />
+              </View>
+              <Text> Current Plans </Text>
+              {this.state.plans == null ||
+              this.state.plans == undefined ||
+              this.state.plans.length == 0 ? (
+                <Text> You do not currently have any active plans. </Text>
+              ) : (
+                this.state.plans.map((planObj, i) => {
+                  return (
+                    <GoalCard
+                      key={i}
+                      plan={planObj.plan}
+                      startDate={planObj.startDate}
+                      endDate={planObj.endDate}
+                      index={planObj.index}
+                      showEditModal={(plan, startDate, endDate, index) =>
+                        this.showEditModal(plan, startDate, endDate, index)
+                      }
+                      showEditButton={true}
                     />
-                :
-                    <View>
-                        <Button title="Go Home" onPress={() => navigate('MainScreen')} />
-                        <View style = {styles.buttonContainer}>
-                            <Button style = {styles.button} title="Create Plan" onPress={this.displayModal} />
-                            <Button style= {styles.button} title="History" onPress = {() => navigate('GoalHistory')} />
-                        </View>
-                        <Text> Current Plans </Text>
-                        {
-                            (this.state.plans == null || this.state.plans == undefined || this.state.plans.length == 0)
-                            ?
-                                <Text> You do not currently have any active plans. </Text>
-                            :
-                                this.state.plans.map((planObj, i) => {
-                                    return <GoalCard key={i} plan={planObj.plan} startDate={planObj.startDate} endDate={planObj.endDate} index = {planObj.index} showEditModal = {(plan, startDate, endDate, index) => this.showEditModal(plan, startDate, endDate, index)} showEditButton = {true}/>
-                                })
-                        }
-                    </View>
-                }
+                  );
+                })
+              )}
+            </View>
+          )}
         </ScrollView>
-        </View>
+      </View>
     );
   }
 }
@@ -242,12 +315,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    margin: 3
+    margin: 3,
   },
   button: {
-    margin: 3
-  }
-})
+    margin: 3,
+  },
+});
 
 export default GoalSetter;
 

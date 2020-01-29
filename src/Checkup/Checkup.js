@@ -97,6 +97,19 @@ export default class Checkup extends React.Component {
     });
   };
 
+  componentDidMount = () => {
+    this.didBlurSubscription = this.props.navigation.addListener(
+      'didBlur',
+      payload => {
+        this.setState({result: 0, screen: 'Main', checkup: ''});
+      },
+    );
+  };
+
+  componentWillUnmount = () => {
+    this.didBlurSubscription.remove();
+  };
+
   render() {
     const {navigate} = this.props.navigation;
 
@@ -108,13 +121,19 @@ export default class Checkup extends React.Component {
       screen = (
         <View style={styles.parent}>
           <MenuButton />
-          <Text style={styles.pa}>
-            Please answer the questions to the best of your ability. You will be
-            provided with your results after the questionnaire.
+          <Text style={{paddingLeft: 10, fontSize: 24}}>
+            {this.state.checkup} Checkup
           </Text>
           <Text style={styles.pa}>
-            Over the past two weeks, how often have you been bothered by the
-            following problems?
+            Please answer the questions to the best of your ability. You will be
+            provided with your results after you submit the questionnaire.
+          </Text>
+          <Text style={styles.pa}>
+            Over the{' '}
+            <Text style={{textDecorationLine: 'underline'}}>
+              last two weeks
+            </Text>
+            , how often have you been bothered by the following problems?
           </Text>
           <QuestionList
             questions={
@@ -132,6 +151,9 @@ export default class Checkup extends React.Component {
         screen = (
           <View style={{flex: 1}}>
             <MenuButton />
+            <Text style={{paddingLeft: 10, fontSize: 24}}>
+              {this.state.checkup} Checkup
+            </Text>
             <View style={styles.one}>
               <Text style={{padding: 5}}>
                 This self-assessment is used for screening and measuring
@@ -148,8 +170,15 @@ export default class Checkup extends React.Component {
                 please contact a health professional.
               </Text>
               <Text style={{padding: 5}}>
-                Your result is {this.state.result} indicating a{' '}
-                {anxietyRange(this.state.result)} level of anxiety.
+                Your result is{' '}
+                <Text style={{textDecorationLine: 'underline'}}>
+                  {this.state.result}
+                </Text>{' '}
+                indicating a{' '}
+                <Text style={{textDecoratoinLine: 'underline'}}>
+                  {anxietyRange(this.state.result)}
+                </Text>{' '}
+                level of anxiety.
               </Text>
             </View>
             <View style={{flex: 1, justifyContent: 'space-around'}}>
@@ -166,7 +195,7 @@ export default class Checkup extends React.Component {
                 <Text style={styles.cell}>10-14</Text>
               </View>
               <View style={styles.row}>
-                <Text style={styles.cell}>Moderately Severe</Text>
+                <Text style={styles.cell}>Severe</Text>
                 <Text style={styles.cell}>15-21</Text>
               </View>
             </View>
@@ -176,6 +205,9 @@ export default class Checkup extends React.Component {
         screen = (
           <View style={{flex: 1}}>
             <MenuButton />
+            <Text style={{paddingLeft: 10, fontSize: 24}}>
+              {this.state.checkup} Checkup
+            </Text>
             <View style={styles.one}>
               <Text style={{padding: 5}}>
                 This self-assessment is used for screening and measuring
@@ -192,8 +224,15 @@ export default class Checkup extends React.Component {
                 please contact a health professional.
               </Text>
               <Text style={{padding: 5}}>
-                Your result is {this.state.result} indicating a{' '}
-                {depressionRange(this.state.result)} level of depression.
+                Your result is{' '}
+                <Text style={{textDecorationLine: 'underline'}}>
+                  {this.state.result}
+                </Text>{' '}
+                indicating a{' '}
+                <Text style={{textDecorationLine: 'underline'}}>
+                  {depressionRange(this.state.result)}
+                </Text>{' '}
+                level of depression.
               </Text>
             </View>
             <View style={{flex: 1, justifyContent: 'space-around'}}>

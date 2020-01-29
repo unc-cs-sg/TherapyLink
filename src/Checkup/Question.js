@@ -24,7 +24,9 @@ export default class Question extends Component {
     ));
     return (
       <View>
-        <Text style={{padding: 10}}>{this.props.question}</Text>
+        <Text style={{fontWeight: 'bold', padding: 10}}>
+          {this.props.question}
+        </Text>
         {buttons}
       </View>
     );
