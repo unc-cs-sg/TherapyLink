@@ -170,16 +170,26 @@ export function dropAll(t) {
 
 export function scenarioOne(t) {
   dropAll(t);
-  insertCheckup(t, '2019-11-09', 'Anxiety', 7);
+  insertCheckup(t, '2019-11-09', 'Anxiety', 21);
   insertCheckup(t, '2019-12-01', 'Anxiety', 10);
-  insertCheckup(t, '2019-11-09', 'Depression', 8);
+  insertCheckup(t, '2019-12-05', 'Anxiety', 4);
+  insertCheckup(t, '2019-12-10', 'Anxiety', 11);
+
+  insertCheckup(t, '2019-11-09', 'Depression', 27);
   insertCheckup(t, '2019-12-01', 'Depression', 11);
+  insertCheckup(t, '2019-12-06', 'Depression', 9);
+  insertCheckup(t, '2019-12-10', 'Depression', 13);
 }
 
 export function scenarioTwo(t) {
   dropAll(t);
-  insertCheckup(t, '2019-11-15', 'Anxiety', 6);
+  insertCheckup(t, '2019-11-15', 'Anxiety', 21);
   insertCheckup(t, '2019-12-02', 'Anxiety', 13);
-  insertCheckup(t, '2019-11-15', 'Depression', 5);
+  insertCheckup(t, '2019-12-06', 'Anxiety', 17);
+  insertCheckup(t, '2019-12-10', 'Anxiety', 10);
+
+  insertCheckup(t, '2019-11-15', 'Depression', 27);
   insertCheckup(t, '2019-12-02', 'Depression', 14);
+  insertCheckup(t, '2019-12-05', 'Depression', 16);
+  insertCheckup(t, '2019-12-10', 'Depression', 13);
 }

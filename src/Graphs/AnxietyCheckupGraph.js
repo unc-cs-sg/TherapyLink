@@ -16,7 +16,7 @@ class AnxietyCheckupGraph extends React.Component {
     return (
       <View>
         <MenuButton />
-        <Text>AnxietyCheckups</Text>
+        <Text>Anxiety Checkups</Text>
         <GenerateGraphs cb={selectAllAnxietyCheckup} />
       </View>
     );
